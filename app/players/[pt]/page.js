@@ -10,7 +10,21 @@ async function getPlayer(pt) {
 export default async function PlayerProfile({ params }) {
   const {pt} = await params 
     const player = await getPlayer(pt)
+const ratings = [
+  player.Speed,
+  player.Handling,
+  player.Passing,
+  player.Tackling,
+  player.Game_IQ,
+  player.Fitness,
+  player.Leadership,
+  player.Defence,
+  player.Kicking,
+].filter((v) => typeof v === "number")
 
+const overall = ratings.length
+  ? Math.round(ratings.reduce((a, b) => a + b, 0) / ratings.length)
+  : 0
   return (
     <main className="app">
       <Header active="Players" />
@@ -41,7 +55,7 @@ boxShadow:'0 10px 30px rgba(0,0,0,0.35)'
             <h2>{player.First_name} {player.Last_name}</h2>
             <p className="small">{player.Primary_position} {player.Secondary_position ? `· ${player.Secondary_position}` : ''}</p>
             <div className="stats">
-<div className="stat"><b>{player.Overall || 0}</b>Overall</div>
+<div className="stat"><b>{overall}</b>Overall</div>
               <div className="stat"><b>{player.Caps || 0}</b>Career Caps</div>
               <div className="stat"><b>{player.Tries || 0}</b>2027 Tries</div>
               <div className="stat"><b>{player.Conversions || 0}</b>Conversions</div>
