@@ -3,7 +3,7 @@ import { supabase } from '../../lib/supabase'
 
 async function getPlayers() {
   if (!supabase) return []
-  const { data } = await supabase.from('Players').select('*').order('Pt-number')
+  const { data } = await supabase.from('Players').select('*').order('Pt_number')
   return data || []
 }
 
