@@ -56,6 +56,18 @@ boxShadow:'0 10px 30px rgba(0,0,0,0.35)'
             <h3>Development Areas</h3>
             <p>{player.Development}</p>
           </div>
+              <div className="panel wide">
+  <h3>Player Ratings</h3>
+  <p>⚡ Speed: {player.Speed || 0}</p>
+  <p>🤲 Handling: {player.Handling || 0}</p>
+  <p>🎯 Passing: {player.Passing || 0}</p>
+  <p>💥 Tackling: {player.Tackling || 0}</p>
+  <p>🧠 Game IQ: {player.Game_IQ || 0}</p>
+  <p>❤️ Fitness: {player.Fitness || 0}</p>
+  <p>👑 Leadership: {player.Leadership || 0}</p>
+  <p>🛡 Defence: {player.Defence || 0}</p>
+  <p>👟 Kicking: {player.Kicking || 0}</p>
+</div>
           <div className="panel wide">
             <h3>Coach Notes / Awards</h3>
             <p>{player.Awards || 'To be added.'}</p>
