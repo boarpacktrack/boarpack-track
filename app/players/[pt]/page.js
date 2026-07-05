@@ -58,15 +58,44 @@ boxShadow:'0 10px 30px rgba(0,0,0,0.35)'
           </div>
               <div className="panel wide">
   <h3>Player Ratings</h3>
-  <p>⚡ Speed: {player.Speed || 0}</p>
-  <p>🤲 Handling: {player.Handling || 0}</p>
-  <p>🎯 Passing: {player.Passing || 0}</p>
-  <p>💥 Tackling: {player.Tackling || 0}</p>
-  <p>🧠 Game IQ: {player.Game_IQ || 0}</p>
-  <p>❤️ Fitness: {player.Fitness || 0}</p>
-  <p>👑 Leadership: {player.Leadership || 0}</p>
-  <p>🛡 Defence: {player.Defence || 0}</p>
-  <p>👟 Kicking: {player.Kicking || 0}</p>
+  {[
+  ["⚡ Speed", player.Speed],
+  ["🤲 Handling", player.Handling],
+  ["🎯 Passing", player.Passing],
+  ["💥 Tackling", player.Tackling],
+  ["🧠 Game IQ", player.Game_IQ],
+  ["❤️ Fitness", player.Fitness],
+  ["👑 Leadership", player.Leadership],
+  ["🛡 Defence", player.Defence],
+  ["👟 Kicking", player.Kicking],
+].map(([label, value]) => (
+  <div key={label} style={{ marginBottom: "16px" }}>
+    <div style={{
+      display: "flex",
+      justifyContent: "space-between",
+      marginBottom: "4px",
+      fontWeight: "bold"
+    }}>
+      <span>{label}</span>
+      <span>{value || 0}</span>
+    </div>
+
+    <div style={{
+      background: "#1b2840",
+      borderRadius: "10px",
+      overflow: "hidden",
+      height: "14px"
+    }}>
+      <div
+        style={{
+          width: `${value || 0}%`,
+          height: "100%",
+          background: "linear-gradient(90deg,#f5b51b,#ffd84d)"
+        }}
+      />
+    </div>
+  </div>
+))}
 </div>
           <div className="panel wide">
             <h3>Coach Notes / Awards</h3>
