@@ -23,7 +23,7 @@ export default async function PlayerProfile({ params }) {
         <section className="grid">
           <div className="panel wide">
             <div className="pt">{player.Pt_number}</div>
-            <h2>{player.First-name} {player.Last-name}</h2>
+            <h2>{player.First_name} {player.Last_name}</h2>
             <p className="small">{player.Primary_position} {player.Secondary_position ? `· ${player.Secondary_position}` : ''}</p>
             <div className="stats">
               <div className="stat"><b>{player.Caps || 0}</b>Career Caps</div>
