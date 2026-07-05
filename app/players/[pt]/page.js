@@ -3,7 +3,7 @@ import { supabase } from '../../../lib/supabase'
 
 async function getPlayer(pt) {
   if (!supabase) return null
-  const { data } = await supabase.from('Players').select('*').eq('pt_number', pt).single()
+  const { data } = await supabase.from('Players').select('*').eq('Pt_number', pt).single()
   return data
 }
 
@@ -21,27 +21,27 @@ export default async function PlayerProfile({ params }) {
       ) : (
         <section className="grid">
           <div className="panel wide">
-            <div className="pt">{player.pt_number}</div>
-            <h2>{player.first_name} {player.last_name}</h2>
-            <p className="small">{player.primary_position} {player.secondary_position ? `· ${player.secondary_position}` : ''}</p>
+            <div className="pt">{player.Pt_number}</div>
+            <h2>{player.First-name} {player.Last-name}</h2>
+            <p className="small">{player.Primary_position} {player.Secondary_position ? `· ${player.Secondary_position}` : ''}</p>
             <div className="stats">
-              <div className="stat"><b>{player.caps || 0}</b>Career Caps</div>
-              <div className="stat"><b>{player.tries || 0}</b>2027 Tries</div>
-              <div className="stat"><b>{player.conversions || 0}</b>Conversions</div>
-              <div className="stat"><b>{player.pack_score || 0}</b>Pack Score</div>
+              <div className="stat"><b>{player.Caps || 0}</b>Career Caps</div>
+              <div className="stat"><b>{player.Tries || 0}</b>2027 Tries</div>
+              <div className="stat"><b>{player.Conversions || 0}</b>Conversions</div>
+              <div className="stat"><b>{player.Pack_score || 0}</b>Pack Score</div>
             </div>
           </div>
           <div className="panel half">
             <h3>Strengths</h3>
-            <p>{player.strengths}</p>
+            <p>{player.Strengths}</p>
           </div>
           <div className="panel half">
             <h3>Development Areas</h3>
-            <p>{player.development}</p>
+            <p>{player.Development}</p>
           </div>
           <div className="panel wide">
             <h3>Coach Notes / Awards</h3>
-            <p>{player.awards || 'To be added.'}</p>
+            <p>{player.Awards || 'To be added.'}</p>
           </div>
         </section>
       )}
