@@ -89,8 +89,15 @@ boxShadow:'0 10px 30px rgba(0,0,0,0.35)'
       <div
         style={{
           width: `${value || 0}%`,
-          height: "100%",
-          background: "linear-gradient(90deg,#f5b51b,#ffd84d)"
+          height:"100%",
+    background:
+  value >= 85
+    ? "linear-gradient(90deg,#2ecc71,#27ae60)"
+    : value >= 70
+    ? "linear-gradient(90deg,#f5b51b,#ffd84d)"
+    : value >= 50
+    ? "linear-gradient(90deg,#ff9800,#ffb74d)"
+    : "linear-gradient(90deg,#e53935,#ff5252)"
         }}
       />
     </div>
