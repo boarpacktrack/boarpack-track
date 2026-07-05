@@ -8,7 +8,8 @@ async function getPlayer(pt) {
 }
 
 export default async function PlayerProfile({ params }) {
-  const player = await getPlayer(params.pt)
+  const {pt} = await params 
+    const player = await getPlayer(pt)
 
   return (
     <main className="app">
