@@ -3,7 +3,7 @@ import { supabase } from '../../lib/supabase'
 
 async function getPlayers() {
   if (!supabase) return []
-  const { data } = await supabase.from('Players').select('*').order('pt_number')
+  const { data } = await supabase.from('Players').select('*').order('Pt-number')
   return data || []
 }
 
@@ -21,10 +21,10 @@ export default async function PlayersPage() {
             {players.map((p) => (
               <a className="card" key={p.id || p.pt_number} href={`/players/${p.pt_number}`}>
                 <div className="pt">{p.pt_number}</div>
-                <div className="name">{p.first_name} {p.last_name}</div>
-                <div>{p.primary_position}</div>
-                <span className="badge">{p.caps || 0} caps</span>
-                {p.secondary_position && <span className="badge">{p.secondary_position}</span>}
+                <div className="name">{p.First_name} {p.Last_name}</div>
+                <div>{p.Primary_position}</div>
+                <span className="badge">{p.Caps || 0} Caps</span>
+                {p.Secondary_position && <span className="badge">{p.Secondary_position}</span>}
               </a>
             ))}
             {!players.length && (
