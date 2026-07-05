@@ -21,14 +21,14 @@ export default async function PlayerProfile({ params }) {
         </section>
       ) : (
         <section className="grid">
-          <div className="panel wide">
+          <div className="panel wide" style={{ textAlign: 'center' }}>
     {player.Profile_image && (
   <img
     src={player.Profile_image}
     alt={`${player.First_name} ${player.Last_name}`}
     style={{
-      width: '180px',
-      height: '180px',
+      width: '220px',
+      height: '220px',
       borderRadius: '50%',
       objectFit: 'cover',
       marginBottom: '16px',
