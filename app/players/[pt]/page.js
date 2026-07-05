@@ -22,6 +22,19 @@ export default async function PlayerProfile({ params }) {
       ) : (
         <section className="grid">
           <div className="panel wide">
+    {player.Profile_image && (
+  <img
+    src={player.Profile_image}
+    alt={`${player.First_name} ${player.Last_name}`}
+    style={{
+      width: '120px',
+      height: '120px',
+      borderRadius: '50%',
+      objectFit: 'cover',
+      marginBottom: '12px'
+    }}
+  />
+)}
             <div className="pt">{player.Pt_number}</div>
             <h2>{player.First_name} {player.Last_name}</h2>
             <p className="small">{player.Primary_position} {player.Secondary_position ? `· ${player.Secondary_position}` : ''}</p>
