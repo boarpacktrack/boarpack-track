@@ -31,7 +31,7 @@ export default async function PlayerProfile({ params }) {
       height: '180px',
       borderRadius: '50%',
       objectFit: 'cover',
-      marginBottom: '16px'
+      marginBottom: '16px',
       border:'4px solid #f5b51b',
 boxShadow:'0 10px 30px rgba(0,0,0,0.35)'
     }}
