@@ -19,7 +19,7 @@ export default async function PlayersPage() {
           <p className="small">Live squad pulled from Supabase.</p>
           <div className="cards">
             {players.map((p) => (
-              <a className="card" key={p.id || p.pt_number} href={`/players/${p.pt_number}`}>
+              <a className="card" key={p.id || p.pt_number} href={`/players/${p.Pt_number}`}>
                 <div className="pt">{p.pt_number}</div>
                 <div className="name">{p.First_name} {p.Last_name}</div>
                 <div>{p.Primary_position}</div>
