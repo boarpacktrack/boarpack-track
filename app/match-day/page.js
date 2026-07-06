@@ -1,5 +1,5 @@
 import { Header, FooterNav } from '../components'
-import { supabase } from '../lib/supabase'
+import { supabase } from '../../lib/supabase'
 
 async function getMatches() {
   if (!supabase) return []
