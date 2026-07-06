@@ -139,6 +139,7 @@ boxShadow:'0 10px 30px rgba(0,0,0,0.35)'
   </div>
 ))}
 </div>
+  
           <div className="panel wide">
             <h3>Coach Notes / Awards</h3>
             <p>{player.Awards || 'To be added.'}</p>
