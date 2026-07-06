@@ -15,7 +15,7 @@ export default async function MatchDayPage() {
 
   const matches = await getMatches()
 const nextMatch = matches[0]
-  
+  console.log(nextMatch)
   return (
     <main className="app">
       <Header active="Match Day" />
