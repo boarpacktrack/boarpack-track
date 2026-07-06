@@ -1,13 +1,30 @@
 import { Header, FooterNav } from '../components'
+import { supabase } from '../lib/supabase'
 
-export default function MatchDayPage() {
+async function getMatches() {
+  if (!supabase) return []
+
+  const { data } = await supabase
+    .from('Matches')
+    .select('*')
+    .order('Match_date', { ascending: false })
+
+  return data || []
+}
+export default async function MatchDayPage() {
+
+  const matches = await getMatches()
+const nextMatch = matches[0]
+  
   return (
     <main className="app">
       <Header active="Match Day" />
       <section className="grid">
         <div className="panel wide">
           <h2>Match Day Centre</h2>
-          <p className="small">Bradford Salem U14s v Wharfedale U14s · Sunday · 11:00</p>
+          <p className="small">
+  {nextMatch?.Opponent} • {nextMatch?.Venue} • {nextMatch?.Match_date}
+</p>
           <div className="stats">
             <div className="stat"><b>12</b>Available</div>
             <div className="stat"><b>15</b>Squad</div>
