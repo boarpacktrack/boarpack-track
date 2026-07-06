@@ -4,17 +4,19 @@ import { supabase } from '../../lib/supabase'
 async function getMatches() {
   if (!supabase) return []
 
-  const { data } = await supabase
-    .from('Matches')
-    .select('*')
-    .order('Match_date', { ascending: false })
+  const { data, error } = await supabase
+  .from('Matches')
+  .select('*')
+.order('Match_date', { ascending: false })
+console.log("DATA:", data)
+console.log("ERROR:", error)
 
-  return data || []
+return data || []
 }
 export default async function MatchDayPage() {
 
   const matches = await getMatches()
-const nextMatch = matches[0]
+const nextMatch = matches?.[0] || null
   console.log(nextMatch)
   return (
     <main className="app">
