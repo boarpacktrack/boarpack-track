@@ -33,7 +33,15 @@ export default async function Dashboard() {
           <p><a className="button gold" href="/match-day">Match Day Centre</a></p>
           <p><a className="button" href="/players">View Player Profiles</a></p>
         </div>
+<div className="panel wide">
+  <h3>🏅 Awards Leaders</h3>
 
+  <p>⭐ Player of the Match Leader: Coming soon</p>
+  <p>💪 Coaches Player Leader: Coming soon</p>
+  <p>✨ Magic Moment Leader: Coming soon</p>
+  <p>🚀 Most Improved Leader: Coming soon</p>
+  <p>👑 Captain(s): Coming soon</p>
+</div>
         <div className="panel half">
           <h3>Coach Assistant</h3>
           <p>🎯 Suggested focus: Breakdown & communication</p>
