@@ -45,6 +45,7 @@ const overall = ratings.length
       height: '220px',
       borderRadius: '50%',
       objectFit: 'cover',
+      objectPosition: player.Photo_position || 'center',
       marginBottom: '16px',
       border:'4px solid #f5b51b',
 boxShadow:'0 10px 30px rgba(0,0,0,0.35)'
