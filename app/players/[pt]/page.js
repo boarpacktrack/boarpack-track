@@ -67,6 +67,29 @@ boxShadow:'0 10px 30px rgba(0,0,0,0.35)'
               <div className="stat"><b>{player.Pack_score || 0}</b>Pack Score</div>
             </div>
           </div>
+    <div className="panel wide">
+  <h3>Development Progress</h3>
+  <p className="small">
+    {overall} / {player.Potential || 0} —{" "}
+    {player.Potential
+      ? Math.round((overall / player.Potential) * 100)
+      : 0}
+    % to potential
+  </p>
+
+  <div style={{
+    background: "#1b2840",
+    borderRadius: "10px",
+    overflow: "hidden",
+    height: "16px"
+  }}>
+    <div style={{
+      width: `${player.Potential ? Math.round((overall / player.Potential) * 100) : 0}%`,
+      height: "100%",
+      background: "linear-gradient(90deg,#f5b51b,#ffd84d)"
+    }} />
+  </div>
+</div>
           <div className="panel half">
             <h3>Strengths</h3>
             <p>{player.Strengths}</p>
