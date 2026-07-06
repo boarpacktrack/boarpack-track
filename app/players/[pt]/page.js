@@ -72,26 +72,6 @@ boxShadow:'0 10px 30px rgba(0,0,0,0.35)'
             <p>{player.Development}</p>
           </div>
               <div className="panel wide">
-  <h3>Best Attributes</h3>
-  {[
-    ["⚡ Speed", player.Speed],
-    ["🤲 Handling", player.Handling],
-    ["🎯 Passing", player.Passing],
-    ["💥 Tackling", player.Tackling],
-    ["🧠 Game IQ", player.Game_IQ],
-    ["❤️ Fitness", player.Fitness],
-    ["👑 Leadership", player.Leadership],
-    ["🛡 Defence", player.Defence],
-    ["👟 Kicking", player.Kicking],
-  ]
-    .sort((a, b) => (b[1] || 0) - (a[1] || 0))
-    .slice(0, 3)
-    .map(([label, value]) => (
-      <p key={label}>
-        <b>{label}</b>: {value || 0}
-      </p>
-    ))}
-</div>
   <h3>Player Ratings</h3>
   {[
   ["⚡ Speed", player.Speed],
