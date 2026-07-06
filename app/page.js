@@ -11,7 +11,15 @@ export default async function Dashboard() {
   const players = await getPlayers()
   const totalCaps = players.reduce((sum, p) => sum + (p.Caps || 0), 0)
   const topCap = [...players].sort((a,b)=>(b.Caps||0)-(a.Caps||0))[0]
+const potmLeader = [...players].sort((a, b) => (b.Player_of_the_match || 0) - (a.Player_of_the_match || 0))[0]
 
+const coachesLeader = [...players].sort((a, b) => (b.Coaches_player || 0) - (a.Coaches_player || 0))[0]
+
+const magicLeader = [...players].sort((a, b) => (b.Magic_moment || 0) - (a.Magic_moment || 0))[0]
+
+const improvedLeader = [...players].sort((a, b) => (b.Most_improved || 0) - (a.Most_improved || 0))[0]
+
+const captains = players.filter(p => p.Captain)
   return (
     <main className="app">
       <Header active="Dashboard" />
@@ -36,12 +44,17 @@ export default async function Dashboard() {
 <div className="panel wide">
   <h3>🏅 Awards Leaders</h3>
 
-  <p>⭐ Player of the Match Leader: Coming soon</p>
-  <p>💪 Coaches Player Leader: Coming soon</p>
-  <p>✨ Magic Moment Leader: Coming soon</p>
-  <p>🚀 Most Improved Leader: Coming soon</p>
-  <p>👑 Captain(s): Coming soon</p>
-</div>
+  
+<p>⭐ Player of the Match Leader: {potmLeader?.First_name} ({potmLeader?.Player_of_the_match || 0})</p>
+
+<p>💪 Coaches Player Leader: {coachesLeader?.First_name} ({coachesLeader?.Coaches_player || 0})</p>
+
+<p>✨ Magic Moment Leader: {magicLeader?.First_name} ({magicLeader?.Magic_moment || 0})</p>
+
+<p>🚀 Most Improved Leader: {improvedLeader?.First_name} ({improvedLeader?.Most_improved || 0})</p>
+
+<p>👑 Captain(s): {captains.length ? captains.map(c => c.First_name).join(", ") : "None"}</p>
+  </div>
         <div className="panel half">
           <h3>Coach Assistant</h3>
           <p>🎯 Suggested focus: Breakdown & communication</p>
