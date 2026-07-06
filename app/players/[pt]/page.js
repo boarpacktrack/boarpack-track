@@ -25,19 +25,6 @@ const ratings = [
 const overall = ratings.length
   ? Math.round(ratings.reduce((a, b) => a + b, 0) / ratings.length)
   : 0
-  const bestAttributes = [
-  ["⚡ Speed", player.Speed],
-  ["🤲 Handling", player.Handling],
-  ["🎯 Passing", player.Passing],
-  ["💥 Tackling", player.Tackling],
-  ["🧠 Game IQ", player.Game_IQ],
-  ["❤️ Fitness", player.Fitness],
-  ["👑 Leadership", player.Leadership],
-  ["🛡 Defence", player.Defence],
-  ["👟 Kicking", player.Kicking],
-]
-  .sort((a, b) => (b[1] || 0) - (a[1] || 0))
-  .slice(0, 3)
   return (
     <main className="app">
       <Header active="Players" />
@@ -68,14 +55,6 @@ boxShadow:'0 10px 30px rgba(0,0,0,0.35)'
             <div className="pt">{player.Pt_number}</div>
             <h2>{player.First_name} {player.Last_name}</h2>
             <p className="small">{player.Primary_position} {player.Secondary_position ? `· ${player.Secondary_position}` : ''}</p>
-              <div style={{ marginTop: "12px" }}>
-  <p className="small" style={{ fontWeight: "bold" }}>⭐ Best Attributes</p>
-  {bestAttributes.map(([label, value]) => (
-    <p className="small" key={label}>
-      {label}: {value || 0}
-    </p>
-  ))}
-</div>
             <div className="stats">
 <div className="stat"><b>{overall}</b>Overall</div>
               <div className="stat"><b>{player.Caps || 0}</b>Career Caps</div>
