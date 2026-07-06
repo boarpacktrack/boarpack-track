@@ -104,6 +104,15 @@ boxShadow:'0 10px 30px rgba(0,0,0,0.35)'
             <h3>Development Areas</h3>
             <p>{player.Development}</p>
           </div>
+      <div className="panel wide">
+  <h3>🏆 Awards & Achievements</h3>
+
+  <p>⭐ Player of the Match: {player.Player_of_the_match || 0}</p>
+  <p>💪 Coaches Player: {player.Coaches_player || 0}</p>
+  <p>✨ Magic Moment: {player.Magic_moment || 0}</p>
+  <p>🚀 Most Improved: {player.Most_improved || 0}</p>
+  <p>👑 Captain: {player.Captain ? "YES" : "NO"}</p>
+</div>
               <div className="panel wide">
   <h3>Player Ratings</h3>
   {[
