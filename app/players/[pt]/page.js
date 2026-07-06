@@ -57,7 +57,13 @@ boxShadow:'0 10px 30px rgba(0,0,0,0.35)'
             <p className="small">{player.Primary_position} {player.Secondary_position ? `· ${player.Secondary_position}` : ''}</p>
             <div className="stats">
 <div className="stat"><b>{overall}</b>Overall</div>
-              <div className="stat">
+  <div
+  className="stat"
+  style={{
+    border: "2px solid #f5b51b",
+    boxShadow: "0 0 18px rgba(245,181,27,0.35)"
+  }}
+>
   <b>{player.Potential || 0}</b>
   Potential ⭐
 </div>
