@@ -5,6 +5,23 @@ import { supabase } from '../../lib/supabase'
 export default function TeamSelector({ players, savedSquad = [] }) {
   const [selected, setSelected] = useState(savedSquad)
 const startingXV = selected.slice(0, 15)
+  const positions = [
+  "Loosehead Prop",
+  "Hooker",
+  "Tighthead Prop",
+  "Lock",
+  "Lock",
+  "Blindside Flanker",
+  "Openside Flanker",
+  "Number 8",
+  "Scrum Half",
+  "Fly Half",
+  "Left Wing",
+  "Inside Centre",
+  "Outside Centre",
+  "Right Wing",
+  "Full Back"
+]
 const bench = selected.slice(15, 23)
   function togglePlayer(id) {
     setSelected((current) => {
@@ -58,11 +75,15 @@ async function saveSquad() {
 
 <h3>Starting XV</h3>
 
-{startingXV.map((id, index) => {
-  const player = players.find(p => p.id === id)
+{positions.map((position, index) => {
+  const player = players.find(p => p.id === startingXV[index])
+
   return (
-    <p key={id}>
-      {index + 1}. {player?.First_name} {player?.Last_name}
+    <p key={position}>
+      <strong>{index + 1}. {position}</strong><br />
+      {player
+        ? `${player.First_name} ${player.Last_name}`
+        : "Not Selected"}
     </p>
   )
 })}
