@@ -1,6 +1,6 @@
 import { Header, FooterNav } from '../components'
 import { supabase } from '../../lib/supabase'
-
+import TeamSelector from './TeamSelector'
 export const dynamic = 'force-dynamic'
 
 async function getPlayers() {
@@ -31,27 +31,11 @@ export default async function TeamSelectionPage() {
         <p>Select your matchday squad.</p>
 
         {players.length === 0 ? (
-          <p>No players found.</p>
-        ) : (
-          <div>
-            {players.map((player) => (
-              <div
-    key={player.id}
-    className="panel"
-    style={{
-        marginBottom: '10px',
-        cursor: 'pointer'
-    }}
->
-                <strong>
-                  {player.First_name} {player.Last_name}
-                </strong>
-                <br />
-                {player.Primary_position}
-              </div>
-            ))}
-          </div>
-        )}
+  <p>No players found.</p>
+) : (
+  <TeamSelector players={players} />
+)}
+        
       </section>
 
       <FooterNav />
