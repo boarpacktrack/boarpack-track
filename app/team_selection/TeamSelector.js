@@ -37,6 +37,30 @@ const bench = selected.slice(15, 23)
   return [...current, id]
 })
   }
+  function changeStartingPlayer(index, playerId) {
+  setSelected((current) => {
+    const next = [...current]
+    const existingIndex = next.indexOf(playerId)
+    const oldPlayer = next[index]
+
+    if (!playerId) {
+      next.splice(index, 1)
+      return next
+    }
+
+    next[index] = playerId
+
+    if (existingIndex !== -1 && existingIndex !== index) {
+      if (oldPlayer) {
+        next[existingIndex] = oldPlayer
+      } else {
+        next.splice(existingIndex, 1)
+      }
+    }
+
+    return next
+  })
+  }
 async function saveSquad() {
   const { error } = await supabase
     .from('Matches')
@@ -85,8 +109,9 @@ async function saveSquad() {
         
     <select
   value={startingXV[index] || ""}
-  onChange={() => {}}
->
+  
+onChange={(e) => changeStartingPlayer(index, e.target.value)}
+  >
   <option value="">Not Selected</option>
 
   {selected.map((playerId) => {
