@@ -6,11 +6,18 @@ export default function TeamSelector({ players }) {
   const [selected, setSelected] = useState([])
 
   function togglePlayer(id) {
-    setSelected((current) =>
-      current.includes(id)
-        ? current.filter((playerId) => playerId !== id)
-        : [...current, id]
-    )
+    setSelected((current) => {
+  if (current.includes(id)) {
+    return current.filter((playerId) => playerId !== id)
+  }
+
+  if (current.length >= 23) {
+    alert('Maximum squad size is 23 players.')
+    return current
+  }
+
+  return [...current, id]
+})
   }
 
   return (
