@@ -36,10 +36,13 @@ export default async function TeamSelectionPage() {
           <div>
             {players.map((player) => (
               <div
-                key={player.id}
-                className="panel"
-                style={{ marginBottom: '10px' }}
-              >
+    key={player.id}
+    className="panel"
+    style={{
+        marginBottom: '10px',
+        cursor: 'pointer'
+    }}
+>
                 <strong>
                   {player.First_name} {player.Last_name}
                 </strong>
