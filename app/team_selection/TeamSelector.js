@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-
+import { supabase } from '../../lib/supabase'
 export default function TeamSelector({ players }) {
   const [selected, setSelected] = useState([])
 
@@ -19,13 +19,34 @@ export default function TeamSelector({ players }) {
   return [...current, id]
 })
   }
+async function saveSquad() {
+  const { error } = await supabase
+    .from('Matches')
+    .update({ Matchday_squad: selected })
+    .eq('id', 1)
 
+  if (error) {
+    alert('Error saving squad')
+    return
+  }
+
+  alert('Squad saved')
+}
   return (
     <div>
       <p>
         <strong>Selected:</strong> {selected.length}/23
       </p>
-
+<button
+  onClick={saveSquad}
+  style={{
+    marginTop: '10px',
+    padding: '8px 16px',
+    cursor: 'pointer'
+  }}
+>
+  Save Squad
+</button>
       {players.map((player) => {
         const isSelected = selected.includes(player.id)
 
