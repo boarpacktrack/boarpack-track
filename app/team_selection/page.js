@@ -9,7 +9,7 @@ async function getPlayers() {
   const { data, error } = await supabase
     .from('Players')
     .select('*')
-    .order('Surname', { ascending: true })
+    .order('Last_name', { ascending: true })
 
   if (error) {
     console.log(error)
@@ -41,10 +41,10 @@ export default async function TeamSelectionPage() {
                 style={{ marginBottom: '10px' }}
               >
                 <strong>
-                  {player.Forename} {player.Surname}
+                  {player.First_name} {player.Last_name}
                 </strong>
                 <br />
-                {player.Position}
+                {player.Primary_position}
               </div>
             ))}
           </div>
