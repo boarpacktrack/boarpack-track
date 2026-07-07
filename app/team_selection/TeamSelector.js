@@ -78,7 +78,7 @@ async function saveSquad() {
   )
 })}
 
-{players.map((player) => {
+
       {players.map((player) => {
         const isSelected = selected.includes(player.id)
 
