@@ -18,10 +18,20 @@ async function getPlayers() {
 
   return data || []
 }
+async function getMatch() {
+  if (!supabase) return null
 
+  const { data } = await supabase
+    .from('Matches')
+    .select('Matchday_squad')
+    .eq('id', 1)
+    .single()
+
+  return data
+}
 export default async function TeamSelectionPage() {
   const players = await getPlayers()
-
+const match = await getMatch()
   return (
     <main className="app">
       <Header active="Team Selection" />
@@ -33,7 +43,10 @@ export default async function TeamSelectionPage() {
         {players.length === 0 ? (
   <p>No players found.</p>
 ) : (
-  <TeamSelector players={players} />
+  <TeamSelector
+  players={players}
+  savedSquad={match?.Matchday_squad || []}
+/>
 )}
         
       </section>
