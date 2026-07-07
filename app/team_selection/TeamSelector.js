@@ -37,6 +37,13 @@ async function saveSquad() {
       <p>
         <strong>Selected:</strong> {selected.length}/23
       </p>
+    <p>
+  <strong>Starting XV:</strong> {Math.min(selected.length, 15)}/15
+</p>
+
+<p>
+  <strong>Bench:</strong> {Math.max(selected.length - 15, 0)}/8
+</p>
 <button
   onClick={saveSquad}
   style={{
