@@ -4,7 +4,8 @@ import { useState } from 'react'
 import { supabase } from '../../lib/supabase'
 export default function TeamSelector({ players, savedSquad = [] }) {
   const [selected, setSelected] = useState(savedSquad)
-
+const startingXV = selected.slice(0, 15)
+const bench = selected.slice(15, 23)
   function togglePlayer(id) {
     setSelected((current) => {
   if (current.includes(id)) {
@@ -54,6 +55,30 @@ async function saveSquad() {
 >
   Save Squad
 </button>
+
+<h3>Starting XV</h3>
+
+{startingXV.map((id, index) => {
+  const player = players.find(p => p.id === id)
+  return (
+    <p key={id}>
+      {index + 1}. {player?.First_name} {player?.Last_name}
+    </p>
+  )
+})}
+
+<h3>Bench</h3>
+
+{bench.map((id, index) => {
+  const player = players.find(p => p.id === id)
+  return (
+    <p key={id}>
+      {16 + index}. {player?.First_name} {player?.Last_name}
+    </p>
+  )
+})}
+
+{players.map((player) => {
       {players.map((player) => {
         const isSelected = selected.includes(player.id)
 
