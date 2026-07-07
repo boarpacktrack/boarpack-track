@@ -79,12 +79,27 @@ async function saveSquad() {
   const player = players.find(p => p.id === startingXV[index])
 
   return (
-    <p key={position}>
+    <div key={position}>
       <strong>{index + 1}. {position}</strong><br />
-      {player
-        ? `${player.First_name} ${player.Last_name}`
-        : "Not Selected"}
-    </p>
+    
+        
+    <select
+  value={startingXV[index] || ""}
+  onChange={() => {}}
+>
+  <option value="">Not Selected</option>
+
+  {selected.map((playerId) => {
+    const optionPlayer = players.find(p => p.id === playerId)
+
+    return (
+      <option key={playerId} value={playerId}>
+        {optionPlayer?.First_name} {optionPlayer?.Last_name}
+      </option>
+    )
+  })}
+</select>
+  </div>
   )
 })}
 
