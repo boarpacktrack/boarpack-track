@@ -2,11 +2,11 @@
 
 import { useState } from 'react'
 import { supabase } from '../../lib/supabase'
-export default function TeamSelector({ players, savedSquad = [] }) {
+export default function TeamSelector({ players, savedSquad = [], savedCaptain = "", savedViceCaptain = "", savedForwardsCaptain = "" }) {
   const [selected, setSelected] = useState(savedSquad)
-  const [captain, setCaptain] = useState("")
-const [viceCaptain, setViceCaptain] = useState("")
-const [forwardsCaptain, setForwardsCaptain] = useState("")
+  const [captain, setCaptain] = useState(savedCaptain)
+const [viceCaptain, setViceCaptain] = useState(savedViceCaptain)
+const [forwardsCaptain, setForwardsCaptain] = useState(savedForwardsCaptain)
 const selectedPlayers = players.filter(p => selected.includes(p.id))
 const startingXV = selected.slice(0, 15)
   const positions = [
