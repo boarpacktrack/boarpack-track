@@ -18,7 +18,9 @@ export default async function MatchDayPage() {
 
   const matches = await getMatches()
 const nextMatch = matches?.[0] || null
-  
+  const captain = nextMatch?.Captain
+const viceCaptain = nextMatch?.Vice_captain
+const forwardsCaptain = nextMatch?.Forwards_captain
   return (
     <main className="app">
       <Header active="Match Day" />
@@ -30,8 +32,10 @@ const nextMatch = matches?.[0] || null
 </p>
           <div className="stats">
             <div className="stat"><b>12</b>Available</div>
-            <div className="stat"><b>15</b>Squad</div>
-            <div className="stat"><b>Isaac</b>Captain</div>
+<div className="stat"><b>{nextMatch?.Matchday_squad?.length || 0}</b>Squad</div>
+<div className="stat"><b>{captain ? "Saved" : "None"}</b>Captain</div>
+<div className="stat"><b>{viceCaptain ? "Saved" : "None"}</b>Vice</div>
+<div className="stat"><b>{forwardsCaptain ? "Saved" : "None"}</b>Forwards</div>
             <div className="stat"><b>0</b>Score</div>
           </div>
         </div>
