@@ -39,8 +39,8 @@ const captains = players.filter(p => p.Captain)
           <h3>Quick Actions</h3>
           <p><a className="button gold" href="/training">Start Training</a></p>
           <p><a className="button gold" href="/match-day">Match Day Centre</a></p>
-          <p><a className="button" href="/players">View Player Profiles</a></p>
-  <p><a className="button gold" href="/team_selection">Team Selection</a></p>
+          <p><a className="button gold" href="/team_selection">Team Selection</a></p>
+<p><a className="button" href="/players">View Player Profiles</a></p>
         </div>
 <div className="panel wide">
   <h3>🏅 Awards Leaders</h3>
