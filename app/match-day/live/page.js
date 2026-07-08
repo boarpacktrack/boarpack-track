@@ -71,6 +71,35 @@ async function addEvent(team, type, points) {
 
 alert(error ? error.message : "Saved to database")
 }
+  async function undoLastEvent() {
+  if (events.length === 0) return
+
+  const lastEvent = events[events.length - 1]
+  const newEvents = events.slice(0, -1)
+
+  const newSalemScore = lastEvent.team === 'Salem'
+    ? salemScore - lastEvent.points
+    : salemScore
+
+  const newOppositionScore = lastEvent.team === 'Opposition'
+    ? oppositionScore - lastEvent.points
+    : oppositionScore
+
+setSalemScore(newSalemScore)
+setOppositionScore(newOppositionScore)
+setEvents(newEvents)
+
+  const { error } = await supabase
+    .from('Matches')
+    .update({
+      Salem_live_score: newSalemScore,
+      Opposition_live_score: newOppositionScore,
+      Match_events: newEvents
+    })
+    .eq('id', matchId)
+
+  alert(error ? error.message : 'Last event undone')
+  }
   return (
     <main className="app">
       <Header active="Match Day" />
