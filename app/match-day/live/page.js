@@ -23,7 +23,8 @@ async function addEvent(team, type, points) {
     {
       team,
       type,
-      points
+      points,
+      player: selectedPlayer
     }
   ])
   const { error } = await supabase
@@ -109,7 +110,7 @@ alert(error ? error.message : "Saved to database")
 
 {events.map((event, index) => (
   <div key={index}>
-    {event.team} {event.type} (+{event.points})
+    {event.player || event.team} {event.type} (+{event.points})
   </div>
 ))}
   </div>
