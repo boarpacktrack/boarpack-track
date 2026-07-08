@@ -48,7 +48,10 @@ async function addEvent(team, type, points) {
       }
     ]
   })
-  .eq('id', matchId)
+.eq('id', matchId)
+.select()
+
+console.log("Update complete")
 }
   return (
     <main className="app">
