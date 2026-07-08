@@ -23,7 +23,7 @@ async function getMatch() {
 
   const { data } = await supabase
     .from('Matches')
-    .select('Matchday_squad')
+    .select('Matchday_squad, Captain, Vice_captain, Forwards_captain')
     .eq('id', 1)
     .single()
 
@@ -46,6 +46,9 @@ const match = await getMatch()
   <TeamSelector
   players={players}
   savedSquad={match?.Matchday_squad || []}
+  savedCaptain={match?.Captain || ""}
+  savedViceCaptain={match?.Vice_captain || ""}
+  savedForwardsCaptain={match?.Forwards_captain || ""}
 />
 )}
         
