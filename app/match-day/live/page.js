@@ -149,13 +149,22 @@ setEvents(newEvents)
 <button onClick={() => addEvent('Opposition', 'Penalty', 3)}>
 🥅 Opposition Penalty
 </button>
-        </div>
-<button
+  <button
   onClick={undoLastEvent}
-  style={{ marginTop: '10px', background: '#d9534f', color: 'white' }}
+  style={{
+    marginTop: '10px',
+    width: '100%',
+    background: '#d9534f',
+    color: 'white',
+    borderRadius: '8px',
+    padding: '10px'
+  }}
 >
   ↩️ Undo Last Event
 </button>
+
+</div>
+      
         <div className="panel half">
   <h3>Match Timeline</h3>
 
