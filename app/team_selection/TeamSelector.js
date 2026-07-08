@@ -68,7 +68,12 @@ const bench = selected.slice(15, 23)
 async function saveSquad() {
   const { error } = await supabase
     .from('Matches')
-    .update({ Matchday_squad: selected })
+    .update({
+  Matchday_squad: selected,
+  Captain: captain || null,
+  Vice_captain: viceCaptain || null,
+  Forwards_captain: forwardsCaptain || null
+})
     .eq('id', 1)
 
   if (error) {
