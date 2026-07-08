@@ -29,15 +29,15 @@ async function addEvent(team, type, points) {
   await supabase
   .from('Matches')
   .update({
-    salem_live_score: team === 'Salem'
+    Salem_live_score: team === 'Salem'
       ? salemScore + points
       : salemScore,
 
-    opposition_live_score: team === 'Opposition'
+    Opposition_live_score: team === 'Opposition'
       ? oppositionScore + points
       : oppositionScore,
 
-    match_events: [
+    Match_events: [
       ...events,
       {
         team,
