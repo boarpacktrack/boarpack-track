@@ -24,7 +24,7 @@ async function addEvent(team, type, points) {
       team,
       type,
       points,
-      player: selectedPlayer
+      player: selectedPlayer|| null
     }
   ])
   const { error } = await supabase
