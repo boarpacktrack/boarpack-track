@@ -26,7 +26,7 @@ async function addEvent(team, type, points) {
       points
     }
   ])
-  await supabase
+  const { error } = await supabase
   .from('Matches')
   .update({
     Salem_live_score: team === 'Salem'
@@ -51,7 +51,7 @@ async function addEvent(team, type, points) {
 .eq('id', matchId)
 .select()
 
-console.log("Update complete")
+alert(error ? error.message : "Saved to database")
 }
   return (
     <main className="app">
