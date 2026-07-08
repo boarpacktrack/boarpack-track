@@ -8,7 +8,7 @@ export default function LiveMatchPage() {
   const [salemScore, setSalemScore] = useState(0)
 const [oppositionScore, setOppositionScore] = useState(0)
   const [events, setEvents] = useState([])
-
+const [selectedPlayer, setSelectedPlayer] = useState('')
 function addEvent(team, type, points) {
   if (team === 'Salem') {
     setSalemScore(salemScore + points)
@@ -41,6 +41,17 @@ function addEvent(team, type, points) {
         </div>
 
         <div className="panel half">
+    <h3>Player</h3>
+
+<select
+  value={selectedPlayer}
+  onChange={(e) => setSelectedPlayer(e.target.value)}
+>
+  <option value="">Select Player</option>
+  <option>Isaac Birkett</option>
+  <option>Zach Hollings</option>
+  <option>Ethan Greenwood</option>
+</select>
           <h3>Score Events</h3>
           <button onClick={() => addEvent('Salem', 'Try', 5)}>
 🏉 Salem Try
