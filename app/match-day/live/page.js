@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Header, FooterNav } from '../../components'
 import { supabase } from '../../../lib/supabase'
 
@@ -11,6 +11,23 @@ const [oppositionScore, setOppositionScore] = useState(0)
   const [events, setEvents] = useState([])
 const [selectedPlayer, setSelectedPlayer] = useState('')
   const matchId = 1
+  useEffect(() => {
+  async function loadMatch() {
+    const { data } = await supabase
+      .from('Matches')
+      .select('Salem_live_score, Opposition_live_score, Match_events')
+      .eq('id', matchId)
+      .single()
+
+    if (data) {
+      setSalemScore(data.Salem_live_score || 0)
+      setOppositionScore(data.Opposition_live_score || 0)
+      setEvents(data.Match_events || [])
+    }
+  }
+
+  loadMatch()
+    }, [matchId])
 async function addEvent(team, type, points) {
   if (team === 'Salem') {
     setSalemScore(salemScore + points)
