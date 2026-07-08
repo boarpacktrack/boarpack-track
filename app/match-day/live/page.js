@@ -150,7 +150,12 @@ setEvents(newEvents)
 🥅 Opposition Penalty
 </button>
         </div>
-
+<button
+  onClick={undoLastEvent}
+  style={{ marginTop: '10px', background: '#d9534f', color: 'white' }}
+>
+  ↩️ Undo Last Event
+</button>
         <div className="panel half">
   <h3>Match Timeline</h3>
 
