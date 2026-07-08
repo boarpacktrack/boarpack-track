@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { Header, FooterNav } from '../../components'
+import { supabase } from '../../lib/supabase'
 
 export const dynamic = 'force-dynamic'
 
@@ -9,7 +10,8 @@ export default function LiveMatchPage() {
 const [oppositionScore, setOppositionScore] = useState(0)
   const [events, setEvents] = useState([])
 const [selectedPlayer, setSelectedPlayer] = useState('')
-function addEvent(team, type, points) {
+  const matchId = 1
+async function addEvent(team, type, points) {
   if (team === 'Salem') {
     setSalemScore(salemScore + points)
   } else {
@@ -24,6 +26,29 @@ function addEvent(team, type, points) {
       points
     }
   ])
+  await supabase
+  .from('Matches')
+  .update({
+    salem_live_score: team === 'Salem'
+      ? salemScore + points
+      : salemScore,
+
+    opposition_live_score: team === 'Opposition'
+      ? oppositionScore + points
+      : oppositionScore,
+
+    match_events: [
+      ...events,
+      {
+        team,
+        type,
+        points,
+        player: selectedPlayer,
+        time: new Date().toISOString()
+      }
+    ]
+  })
+  .eq('id', matchId)
 }
   return (
     <main className="app">
