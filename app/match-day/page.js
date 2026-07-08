@@ -39,14 +39,14 @@ const forwardsCaptain = nextMatch?.Forwards_captain
             <div className="stat"><b>0</b>Score</div>
           </div>
         </div>
-        <div className="panel half">
-          <h3>Team Selection</h3>
-          <p>Select your squad, captains, bench and generate team sheet.</p>
-        </div>
-        <div className="panel half">
-          <h3>Live Match</h3>
-          <p>Record tries, conversions, cards, substitutions, POTM and final score.</p>
-        </div>
+        <a className="panel half" href="/team_selection">
+  <h3>Team Selection</h3>
+  <p>Select your squad, captains, bench and generate team sheet.</p>
+</a>
+        <a className="panel half" href="/match-day/live">
+  <h3>Live Match</h3>
+  <p>Record tries, conversions, cards, substitutions, POTM and final score.</p>
+</a>
       </section>
       <FooterNav />
     </main>
