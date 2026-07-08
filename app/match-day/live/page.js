@@ -7,6 +7,24 @@ export const dynamic = 'force-dynamic'
 export default function LiveMatchPage() {
   const [salemScore, setSalemScore] = useState(0)
 const [oppositionScore, setOppositionScore] = useState(0)
+  const [events, setEvents] = useState([])
+
+function addEvent(team, type, points) {
+  if (team === 'Salem') {
+    setSalemScore(salemScore + points)
+  } else {
+    setOppositionScore(oppositionScore + points)
+  }
+
+  setEvents([
+    ...events,
+    {
+      team,
+      type,
+      points
+    }
+  ])
+}
   return (
     <main className="app">
       <Header active="Match Day" />
@@ -24,30 +42,39 @@ const [oppositionScore, setOppositionScore] = useState(0)
 
         <div className="panel half">
           <h3>Score Events</h3>
-          <button onClick={() => setSalemScore(salemScore + 5)}>
-  🏉 Salem Try
+          <button onClick={() => addEvent('Salem', 'Try', 5)}>
+🏉 Salem Try
 </button>
 
-<button onClick={() => setOppositionScore(oppositionScore + 5)}>
-  🏉 Opposition Try
+<button onClick={() => addEvent('Opposition', 'Try', 5)}>
+🏉 Opposition Try
 </button>
-          <button onClick={() => setSalemScore(salemScore + 2)}>
-  🎯 Salem Conversion
-</button>
-
-<button onClick={() => setOppositionScore(oppositionScore + 2)}>
-  🎯 Opposition Conversion
-</button>
-          <button onClick={() => setSalemScore(salemScore + 3)}>
-  🏉 Salem Penalty
+          <button onClick={() => addEvent('Salem', 'Conversion', 2)}>
+🎯 Salem Conversion
 </button>
 
-<button onClick={() => setOppositionScore(oppositionScore + 3)}>
-  🏉 Opposition Penalty
+<button onClick={() => addEvent('Opposition', 'Conversion', 2)}>
+🎯 Opposition Conversion
+</button>
+          <button onClick={() => addEvent('Salem', 'Penalty', 3)}>
+🥅 Salem Penalty
+</button>
+
+<button onClick={() => addEvent('Opposition', 'Penalty', 3)}>
+🥅 Opposition Penalty
 </button>
         </div>
 
         <div className="panel half">
+  <h3>Match Timeline</h3>
+
+{events.map((event, index) => (
+  <div key={index}>
+    {event.team} {event.type} (+{event.points})
+  </div>
+))}
+  </div>
+  <div className="panel half">
           <h3>Match Events</h3>
           <button>🔄 Substitution</button>
           <button>🟨 Yellow Card</button>
