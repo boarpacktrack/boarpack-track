@@ -4,6 +4,10 @@ import { useState } from 'react'
 import { supabase } from '../../lib/supabase'
 export default function TeamSelector({ players, savedSquad = [] }) {
   const [selected, setSelected] = useState(savedSquad)
+  const [captain, setCaptain] = useState("")
+const [viceCaptain, setViceCaptain] = useState("")
+const [forwardsCaptain, setForwardsCaptain] = useState("")
+const selectedPlayers = players.filter(p => selected.includes(p.id))
 const startingXV = selected.slice(0, 15)
   const positions = [
   "Loosehead Prop",
@@ -96,7 +100,37 @@ async function saveSquad() {
 >
   Save Squad
 </button>
+<h3>Leadership</h3>
 
+<p>Captain</p>
+<select value={captain} onChange={(e) => setCaptain(e.target.value)}>
+  <option value="">Select Captain</option>
+  {selectedPlayers.map(player => (
+    <option key={player.id} value={player.id}>
+      {player.First_name} {player.Last_name}
+    </option>
+  ))}
+</select>
+
+<p>Vice Captain</p>
+<select value={viceCaptain} onChange={(e) => setViceCaptain(e.target.value)}>
+  <option value="">Select Vice Captain</option>
+  {selectedPlayers.map(player => (
+    <option key={player.id} value={player.id}>
+      {player.First_name} {player.Last_name}
+    </option>
+  ))}
+</select>
+
+<p>Forwards Captain</p>
+<select value={forwardsCaptain} onChange={(e) => setForwardsCaptain(e.target.value)}>
+  <option value="">Select Forwards Captain</option>
+  {selectedPlayers.map(player => (
+    <option key={player.id} value={player.id}>
+      {player.First_name} {player.Last_name}
+    </option>
+  ))}
+</select>
 <h3>Starting XV</h3>
 
 {positions.map((position, index) => {
