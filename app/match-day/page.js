@@ -30,7 +30,13 @@ const forwardsCaptain = nextMatch?.Forwards_captain
           <p className="small">
   {nextMatch?.Opponent} • {nextMatch?.Venue} • {nextMatch?.Match_date}
 </p>
-          <div className="stats">
+          <div
+  className="stats"
+  style={{
+    gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
+    gap: "12px"
+  }}
+>
             <div className="stat"><b>12</b>Available</div>
 <div className="stat"><b>{nextMatch?.Matchday_squad?.length || 0}</b>Squad</div>
 <div className="stat"><b>{captain ? "Saved" : "None"}</b>Captain</div>
@@ -39,11 +45,11 @@ const forwardsCaptain = nextMatch?.Forwards_captain
             <div className="stat"><b>0</b>Score</div>
           </div>
         </div>
-        <a className="panel half" href="/team_selection">
+        <a className="panel wide" href="/team_selection">
   <h3>Team Selection</h3>
   <p>Select your squad, captains, bench and generate team sheet.</p>
 </a>
-        <a className="panel half" href="/match-day/live">
+        <a className="panel wide" href="/match-day/live">
   <h3>Live Match</h3>
   <p>Record tries, conversions, cards, substitutions, POTM and final score.</p>
 </a>
