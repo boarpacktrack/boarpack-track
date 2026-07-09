@@ -37,7 +37,7 @@ const forwardsCaptain = nextMatch?.Forwards_captain
     gap: "12px"
   }}
 >
-            <div className="stat"><b>12</b>Available</div>
+            <div className="stat"><b>{nextMatch?.Matchday_squad?.length || 0}</b>Selected</div>
 <div className="stat"><b>{nextMatch?.Matchday_squad?.length || 0}</b>Squad</div>
 <div className="stat"><b>{captain ? "Saved" : "None"}</b>Captain</div>
 <div className="stat"><b>{viceCaptain ? "Saved" : "None"}</b>Vice</div>
