@@ -1,59 +1,81 @@
 export const dynamic = 'force-dynamic'
+
 import { Header, FooterNav } from '../components'
 import { supabase } from '../../lib/supabase'
 
 async function getMatches() {
   if (!supabase) return []
 
-  const { data, error } = await supabase
-  .from('Matches')
-  .select('*')
-.order('Match_date', { ascending: false })
+  const { data } = await supabase
+    .from('Matches')
+    .select('*')
+    .order('Match_date', { ascending: false })
 
-
-
-return data || []
+  return data || []
 }
-export default async function MatchDayPage() {
 
+export default async function MatchDayPage() {
   const matches = await getMatches()
-const nextMatch = matches?.[0] || null
-  const captain = nextMatch?.Captain
-const viceCaptain = nextMatch?.Vice_captain
-const forwardsCaptain = nextMatch?.Forwards_captain
+  const nextMatch = matches?.[0] || null
+
+  const selectedCount = nextMatch?.Matchday_squad?.length || 0
+  const captainSaved = nextMatch?.Captain ? 'Saved' : 'None'
+  const viceSaved = nextMatch?.Vice_captain ? 'Saved' : 'None'
+  const forwardsSaved = nextMatch?.Forwards_captain ? 'Saved' : 'None'
+
   return (
     <main className="app">
       <Header active="Match Day" />
+
       <section className="grid">
         <div className="panel wide">
-          <h2>Match Day Centre</h2>
+          <h2>🏉 Match Day Centre</h2>
+
           <p className="small">
-  {nextMatch?.Opponent} • {nextMatch?.Venue} • {nextMatch?.Match_date}
-</p>
-          <div
-  className="stats"
-  style={{
-    gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
-    gap: "12px"
-  }}
->
-            <div className="stat"><b>{nextMatch?.Matchday_squad?.length || 0}</b>Selected</div>
-<div className="stat"><b>{nextMatch?.Matchday_squad?.length || 0}</b>Squad</div>
-<div className="stat"><b>{captain ? "Saved" : "None"}</b>Captain</div>
-<div className="stat"><b>{viceCaptain ? "Saved" : "None"}</b>Vice</div>
-<div className="stat"><b>{forwardsCaptain ? "Saved" : "None"}</b>Forwards</div>
-            <div className="stat"><b>0</b>Score</div>
+            {nextMatch
+              ? `${nextMatch.Opponent} • ${nextMatch.Venue} • ${nextMatch.Match_date}`
+              : 'No match loaded yet'}
+          </p>
+
+          <div className="stats">
+            <div className="stat">
+              <b>{selectedCount}</b>
+              Selected
+            </div>
+
+            <div className="stat">
+              <b>{captainSaved}</b>
+              Captain
+            </div>
+
+            <div className="stat">
+              <b>{viceSaved}</b>
+              Vice
+            </div>
+
+            <div className="stat">
+              <b>{forwardsSaved}</b>
+              Forwards
+            </div>
           </div>
         </div>
+
         <a className="panel wide" href="/team_selection">
-  <h3>Team Selection</h3>
-  <p>Select your squad, captains, bench and generate team sheet.</p>
-</a>
+          <h3>📋 Team Selection</h3>
+          <p>Select your squad, captains, bench and generate your team sheet.</p>
+        </a>
+
         <a className="panel wide" href="/match-day/live">
-  <h3>Live Match</h3>
-  <p>Record tries, conversions, cards, substitutions, POTM and final score.</p>
-</a>
+          <h3>🏉 Live Match</h3>
+          <p>Record tries, conversions, penalties, cards, substitutions, POTM and final score.</p>
+        </a>
+
+        <div className="panel wide">
+          <h3>📊 Match Report</h3>
+          <p>Final score, scorers, cards and coach notes will appear here soon.</p>
+        </div>
       </section>
+
       <FooterNav />
     </main>
   )
