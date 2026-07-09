@@ -62,7 +62,37 @@ input,textarea,select{
   width:100%;background:#071a33;color:white;border:1px solid var(--line);border-radius:12px;padding:11px;margin-top:6px
 }
 label{display:block;color:var(--gold);font-weight:800;margin-top:12px}
-@media(max-width:850px){
-  .grid{display:block}.panel{margin:14px 0}.stats{grid-template-columns:repeat(2,1fr)}
-  .header{display:block}.nav{margin-top:12px}.nav a{flex:1;text-align:center}
+@media (max-width:850px){
+
+.grid{
+display:block;
+}
+
+.panel{
+margin:14px 0;
+}
+
+.stats{
+grid-template-columns:1fr 1fr;
+}
+
+.header{
+display:block;
+}
+
+.nav{
+margin-top:12px;
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+}
+
+.nav a{
+text-align:center;
+}
+
+.footerNav{
+padding:12px 0;
+}
+
 }
