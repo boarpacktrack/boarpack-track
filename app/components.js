@@ -9,7 +9,11 @@ export function Header({active}) {
   return (
     <header className="header">
       <div className="brand">
-        <div className="boar">🐗</div>
+       <img
+  src="/boarpack-logo.png"
+  alt="Boar Pack Track"
+  className="boar"
+/>
         <div>
           <h1>BOARPACK <span className="gold">TRACK</span></h1>
           <div className="tag">Built by coaches · For coaches</div>

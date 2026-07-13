@@ -25,9 +25,52 @@ const ratings = [
 const overall = ratings.length
   ? Math.round(ratings.reduce((a, b) => a + b, 0) / ratings.length)
   : 0
+  const topStats = [
+  ["Speed", player.Speed],
+  ["Handling", player.Handling],
+  ["Passing", player.Passing],
+  ["Tackling", player.Tackling],
+  ["Game IQ", player.Game_IQ],
+  ["Fitness", player.Fitness],
+  ["Leadership", player.Leadership],
+  ["Defence", player.Defence],
+  ["Kicking", player.Kicking],
+]
+  .filter(([label, value]) => typeof value === "number")
+  .sort((a, b) => b[1] - a[1])
+  .slice(0, 3);
+
+  const getRatingColor = (rating) => {
+  if (rating >= 90) return "#22c55e"
+  if (rating >= 80) return "#f5b51b"
+  return "#ef4444"
+}
   return (
     <main className="app">
       <Header active="Players" />
+      <a
+  href="/players"
+  style={{
+    display: "inline-block",
+    margin: "14px 0",
+    color: "#f5b51b",
+    fontWeight: "bold",
+  }}
+>
+  ← Back to Players
+</a>
+    <a
+  href={`/players/${player.Pt_number}/edit`}
+  style={{
+    display: "inline-block",
+    margin: "14px 0 14px 18px",
+    color: "#f5b51b",
+    fontWeight: "bold",
+  }}
+>
+  Edit Player
+</a>  
+  
       {!player ? (
         <section className="panel" style={{marginTop:16}}>
           <h2>Player not found</h2>
@@ -98,7 +141,11 @@ boxShadow:'0 10px 30px rgba(0,0,0,0.35)'
 </div>
           <div className="panel half">
             <h3>Strengths</h3>
-            <p>{player.Strengths}</p>
+            {topStats.map(([label, value]) => (
+  <p key={label}>
+    ⭐ {label}: <b>{value}</b>
+  </p>
+))}
           </div>
           <div className="panel half">
             <h3>Development Areas</h3>
@@ -125,6 +172,7 @@ boxShadow:'0 10px 30px rgba(0,0,0,0.35)'
   ["👑 Leadership", player.Leadership],
   ["🛡 Defence", player.Defence],
   ["👟 Kicking", player.Kicking],
+  
 ].map(([label, value]) => (
   <div key={label} style={{ marginBottom: "16px" }}>
     <div style={{
@@ -134,7 +182,9 @@ boxShadow:'0 10px 30px rgba(0,0,0,0.35)'
       fontWeight: "bold"
     }}>
       <span>{label}</span>
-      <span>{value || 0}</span>
+      <span style={{ color: getRatingColor(value) }}>
+  {value || 0}
+</span>
     </div>
 
     <div style={{
@@ -148,13 +198,7 @@ boxShadow:'0 10px 30px rgba(0,0,0,0.35)'
           width: `${value || 0}%`,
           height:"100%",
     background:
-  value >= 85
-    ? "linear-gradient(90deg,#2ecc71,#27ae60)"
-    : value >= 70
-    ? "linear-gradient(90deg,#f5b51b,#ffd84d)"
-    : value >= 50
-    ? "linear-gradient(90deg,#ff9800,#ffb74d)"
-    : "linear-gradient(90deg,#e53935,#ff5252)"
+  `linear-gradient(90deg, ${getRatingColor(value)}, ${getRatingColor(value)})`,
         }}
       />
     </div>

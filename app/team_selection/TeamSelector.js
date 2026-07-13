@@ -1,5 +1,5 @@
 'use client'
-
+import RugbyPitch from "../components/RugbyPitch"
 import { useState } from 'react'
 import { supabase } from '../../lib/supabase'
 export default function TeamSelector({ players, savedSquad = [], savedCaptain = "", savedViceCaptain = "", savedForwardsCaptain = "" }) {
@@ -80,34 +80,98 @@ async function saveSquad() {
     alert('Error saving squad')
     return
   }
+const matchPlayerRows = selected.map((playerId, index) => ({
+  match_id: 1,
+  player_id: playerId,
+  selected: true,
+  started: index < 15,
+  played: true,
+  position: index < 15 ? positions[index] : 'Replacement'
+}))
 
+const { error: deleteError } = await supabase
+  .from('match_players')
+  .delete()
+  .eq('match_id', 1)
+
+if (deleteError) {
+  alert(`Error clearing old squad: ${deleteError.message}`)
+  return
+}
+
+const { error: matchPlayersError } = await supabase
+  .from('match_players')
+  .insert(matchPlayerRows)
+
+if (matchPlayersError) {
+  alert(`Error linking players to match: ${matchPlayersError.message}`)
+  return
+}
   alert('Squad saved')
 }
   return (
     <div>
-      <p>
-        <strong>Selected:</strong> {selected.length}/23
-      </p>
-    <p>
-  <strong>Starting XV:</strong> {Math.min(selected.length, 15)}/15
-</p>
+  <div style={{
+  display: "grid",
+  gridTemplateColumns: "repeat(3, 1fr)",
+  gap: "12px",
+  margin: "20px 0"
+}}>
 
-<p>
-  <strong>Bench:</strong> {Math.max(selected.length - 15, 0)}/8
-</p>
+  <div style={{
+    background: "#163d75",
+    padding: "16px",
+    borderRadius: "12px",
+    textAlign: "center"
+  }}>
+    <div style={{fontSize:"28px",fontWeight:"bold"}}>{selected.length}</div>
+    <div>Selected</div>
+  </div>
+
+  <div style={{
+    background: "#163d75",
+    padding: "16px",
+    borderRadius: "12px",
+    textAlign: "center"
+  }}>
+    <div style={{fontSize:"28px",fontWeight:"bold"}}>{Math.min(selected.length,15)}</div>
+    <div>Starting XV</div>
+  </div>
+
+  <div style={{
+    background: "#163d75",
+    padding: "16px",
+    borderRadius: "12px",
+    textAlign: "center"
+  }}>
+    <div style={{fontSize:"28px",fontWeight:"bold"}}>{Math.max(selected.length-15,0)}</div>
+    <div>Bench</div>
+  </div>
+ <RugbyPitch 
+ players={players}
+ selected={selected}
+ />
+</div>
 <button
   onClick={saveSquad}
   style={{
-    marginTop: '10px',
-    padding: '8px 16px',
-    cursor: 'pointer'
-  }}
+  marginTop: "10px",
+  padding: "12px 24px",
+  background: "linear-gradient(135deg, #d4a017, #f0c23a)",
+  color: "white",
+  border: "none",
+  borderRadius: "10px",
+  fontWeight: "bold",
+  fontSize: "16px",
+  cursor: "pointer",
+  boxShadow: "0 4px 12px rgba(0,0,0,.35)"
+}}
 >
-  Save Squad
+  💾 Save Matchday Squad
 </button>
-<h3>Leadership</h3>
+<h3>🏉 Leadership Team</h3>
 
-<p>Captain</p>
+<p><strong>👑 Captain</strong></p>
 <select value={captain} onChange={(e) => setCaptain(e.target.value)}>
   <option value="">Select Captain</option>
   {selectedPlayers.map(player => (
@@ -117,7 +181,7 @@ async function saveSquad() {
   ))}
 </select>
 
-<p>Vice Captain</p>
+<p><strong>⭐ Vice Captain</strong></p>
 <select value={viceCaptain} onChange={(e) => setViceCaptain(e.target.value)}>
   <option value="">Select Vice Captain</option>
   {selectedPlayers.map(player => (
@@ -127,7 +191,7 @@ async function saveSquad() {
   ))}
 </select>
 
-<p>Forwards Captain</p>
+<p><strong>🛡️ Forwards Captain</strong></p>
 <select value={forwardsCaptain} onChange={(e) => setForwardsCaptain(e.target.value)}>
   <option value="">Select Forwards Captain</option>
   {selectedPlayers.map(player => (
@@ -202,6 +266,7 @@ onChange={(e) => changeStartingPlayer(index, e.target.value)}
           </div>
         )
       })}
+     
     </div>
   )
 }
