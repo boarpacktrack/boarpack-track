@@ -113,38 +113,38 @@ if (matchPlayersError) {
     <div>
   <div style={{
   display: "grid",
-  gridTemplateColumns: "repeat(3, 1fr)",
+  gridTemplateColumns: "repeat(auto-fit,minimax(110px,1fr))",
   gap: "12px",
   margin: "20px 0"
 }}>
 
   <div style={{
     background: "#163d75",
-    padding: "16px",
+    padding: "12px 8px",
     borderRadius: "12px",
     textAlign: "center"
   }}>
-    <div style={{fontSize:"28px",fontWeight:"bold"}}>{selected.length}</div>
+    <div style={{fontSize:"24px",fontWeight:"bold"}}>{selected.length}</div>
     <div>Selected</div>
   </div>
 
   <div style={{
     background: "#163d75",
-    padding: "16px",
+    padding: "12px 8px",
     borderRadius: "12px",
     textAlign: "center"
   }}>
-    <div style={{fontSize:"28px",fontWeight:"bold"}}>{Math.min(selected.length,15)}</div>
+    <div style={{fontSize:"24px",fontWeight:"bold"}}>{Math.min(selected.length,15)}</div>
     <div>Starting XV</div>
   </div>
 
   <div style={{
     background: "#163d75",
-    padding: "16px",
+    padding: "12px 8 px",
     borderRadius: "12px",
     textAlign: "center"
   }}>
-    <div style={{fontSize:"28px",fontWeight:"bold"}}>{Math.max(selected.length-15,0)}</div>
+    <div style={{fontSize:"24px",fontWeight:"bold"}}>{Math.max(selected.length-15,0)}</div>
     <div>Bench</div>
   </div>
  <RugbyPitch 

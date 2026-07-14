@@ -59,7 +59,7 @@ alignItems: "center"
 
       <div
         style={{
-          width: "calc(100vw - 80px)",
+          width: "100%",
 maxWidth: "1100px",
 height: "460px",
           position: "relative",

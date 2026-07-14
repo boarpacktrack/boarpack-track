@@ -7,7 +7,7 @@ export function Header({active}) {
   ]
 
   return (
-    <header className="header">
+    <header>
       <div className="brand">
        <img
   src="/boarpack-logo.png"
