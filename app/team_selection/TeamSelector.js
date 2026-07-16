@@ -113,7 +113,7 @@ if (matchPlayersError) {
     <div>
   <div style={{
   display: "grid",
-  gridTemplateColumns: "repeat(auto-fit,minimax(110px,1fr))",
+  gridTemplateColumns: "repeat(3, 1fr)",
   gap: "12px",
   margin: "20px 0"
 }}>

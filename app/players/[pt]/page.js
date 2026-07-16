@@ -210,7 +210,35 @@ boxShadow:'0 10px 30px rgba(0,0,0,0.35)'
             <h3>Coach Notes / Awards</h3>
             <p>{player.Awards || 'To be added.'}</p>
           </div>
-        </section>
+        </section>,
+        <div
+  style={{
+    marginTop: "30px",
+    background: "#163d75",
+    borderRadius: "16px",
+    padding: "20px"
+  }}
+>
+  <h2>📈 Player Development Plan</h2>
+
+  <p>
+    This player's personalised development plan will appear here.
+  </p>
+
+  <a href={`/players/${player.Pt_number}/development`}
+    style={{
+      background: "#f0b323",
+      color: "#163d75",
+      padding: "12px 20px",
+      border: "none",
+      borderRadius: "10px",
+      fontWeight: "bold",
+      cursor: "pointer"
+    }}
+  >
+    View Development Plan
+  </a>
+</div>
       )}
       <FooterNav />
     </main>
