@@ -80,6 +80,11 @@ export default async function PlayerProfile({ params }) {
   }
 
   const achievements = await getAchievements(player.id);
+const { data: coachReviews } = await supabase
+  .from("player_coach_reviews")
+  .select("*")
+  .eq("player_id", player.id)
+  .order("review_date", { ascending: false });
 const achievementStats = {
   total: achievements.length,
 
@@ -825,7 +830,14 @@ const latestAchievement = achievements[0] || null;
           )}
         </div>
       </section>
-
+<section className="panel">
+            <h2>Coach Reviews</h2>
+          {coachReviews?.length > 0 ? (
+  <p>{coachReviews.length} review(s) found.</p>
+) : (
+  <p>No coach reviews yet.</p>
+)}
+          </section>
       <FooterNav />
     </main>
   );
