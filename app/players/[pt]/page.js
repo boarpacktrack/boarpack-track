@@ -1,6 +1,8 @@
 import { Header, FooterNav } from "../../components";
 import { supabase } from "../../../lib/supabase";
-
+import SkillsDashboard from "../../components/SkillsDashboard";
+import ReviewProgressGraph from "../../components/ReviewProgressGraph";
+import PlayerAnalyticsDashboard from "../../components/PlayerAnalyticsDashboard";
 async function getPlayer(pt) {
   if (!supabase) return null;
 
@@ -48,7 +50,19 @@ function formatAchievementDate(dateValue) {
 export default async function PlayerProfile({ params }) {
   const { pt } = await params;
   const player = await getPlayer(pt);
-
+const { data: developmentPlans } = await supabase
+  .from("player_development_plans")
+  .select("*")
+  .eq("player_id", player?.id)
+  .order("created_at", { ascending: false });
+  const plans = developmentPlans || [];
+  const developmentPlan = plans[0];
+  const { data: developmentHistory } = await supabase
+  .from("player_development_history")
+  .select("*")
+  .eq("player_id", player?.id)
+  .order("created_at", { ascending: false });
+  const history = developmentHistory || [];
   if (!player) {
     return (
       <main className="app">
@@ -289,20 +303,155 @@ const latestAchievement = achievements[0] || null;
             />
           </div>
         </div>
+<div className="panel wide">
+  <h3>📋 Individual Player Development Plan(IPDP)</h3>
+<p className="small">
+  Live development review for {player.First_name} {player.Last_name}.
+</p>
+<div className="stats">
+  <div className="stat">
+    <b>Coach</b>
+    {player.Coach || "Not Assigned"}
+  </div>
 
-        <div className="panel half">
-          <h3>Strengths</h3>
+  <div className="stat">
+    <b>Review</b>
+    {player.Review_period || "Not Set"}
+  </div>
 
-          {topStats.length === 0 ? (
-            <p>No ratings have been added yet.</p>
-          ) : (
-            topStats.map(([label, value]) => (
-              <p key={label}>
-                ⭐ {label}: <b>{value}</b>
-              </p>
-            ))
-          )}
-        </div>
+  <div className="stat">
+    <b>Next Review</b>
+   {player.Next_review || "Not Set"}
+  </div>
+  <div className="stat">
+  <b>Status</b>
+ <span
+  style={{
+    color:
+      player.Review_status === "Needs Attention"
+        ? "red"
+        : player.Review_status === "Review Due"
+        ? "orange"
+        : "limegreen",
+    fontWeight: "bold",
+  }}
+>
+  {player.Review_status || "On Track"}
+</span>
+</div>
+<div className="panel wide" style={{ marginBottom: "16px" }}>
+  <h3>🎯 Player Development Goals</h3>
+
+  <p>
+    <b>Primary Goal:</b>{" "}
+    {developmentPlan?.target || "No development goal has been set."}
+  </p>
+
+  <p>
+    <b>Category:</b>{" "}
+    {developmentPlan?.category || "Not Set"}
+  </p>
+<p>
+  <b>Coach Notes:</b>{" "}
+  {developmentPlan?.coach_notes || "No coach notes."}
+</p>
+
+<p>
+  <b>Review Date:</b>{" "}
+  {developmentPlan?.review_date || "Not Set"}
+</p>
+<p><b>Progress</b></p>
+
+<div
+  style={{
+    width: "100%",
+    height: "10px",
+    background: "#2b2b2b",
+    borderRadius: "6px",
+    overflow: "hidden",
+    marginTop: "6px",
+  }}
+>
+  <div
+    style={{
+      width: `${developmentPlan?.progress || 0}%`,
+      height: "100%",
+      background: "#f4c542",
+    }}
+  />
+</div>
+
+<p style={{ marginTop: "6px", fontSize: "12px" }}>
+  {developmentPlan?.progress || 0}%
+</p>
+</div>
+<div className="panel wide" style={{ marginTop: "16px" }}>
+  <h3>🎯 Current Focus</h3>
+
+  <p>
+    {player.Current_focus || "No current focus has been set."}
+    </p>
+<div style={{ marginTop: "12px" }}>
+  <div
+    style={{
+      width: "100%",
+      height: "10px",
+      background: "#2b2b2b",
+      borderRadius: "6px",
+      overflow: "hidden",
+    }}
+  >
+    <div
+      style={{
+        width: `${player.Focus_progress || 0}%`,
+        height: "100%",
+        background: "#f4c542",
+      }}
+    />
+  </div>
+
+  <p style={{ marginTop: "6px", fontSize: "12px" }}>
+    Progress: {player.Focus_progress || 0}%
+  </p>
+</div>
+
+
+<div className="panel wide" style={{ marginTop: "16px" }}>
+  <h3>📈 Development History</h3>
+
+  {history.length === 0 ? (
+    <p>No development history yet.</p>
+  ) : (
+    history.map((item) => (
+      <div
+        key={item.id}
+        style={{
+          borderBottom: "1px solid #333",
+          padding: "12px 0",
+        }}
+      >
+        <b>{item.event_type}</b>
+
+        <p>{item.notes}</p>
+
+        <small>
+          {new Date(item.created_at).toLocaleDateString("en-GB")}
+        </small>
+      </div>
+    ))
+  )}
+</div>
+
+
+  <h4>Coach Notes</h4>
+
+  <p>
+    {player.Coach_notes || "No coach notes have been added."}
+  </p>
+</div>
+</div>
+</div>
+<SkillsDashboard player={player} />
 
         <div className="panel half">
           <h3>Development Areas</h3>
@@ -398,7 +547,11 @@ const latestAchievement = achievements[0] || null;
 
           <p>{player.Awards || "To be added."}</p>
         </div>
-
+<PlayerAnalyticsDashboard
+  player={player}
+  reviews={coachReviews}
+  achievements={achievements}
+/>
         <div
           className="panel wide"
           style={{
@@ -831,9 +984,103 @@ const latestAchievement = achievements[0] || null;
         </div>
       </section>
 <section className="panel">
-            <h2>Coach Reviews</h2>
-          {coachReviews?.length > 0 ? (
-  <p>{coachReviews.length} review(s) found.</p>
+            <div
+  style={{
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    gap: "12px",
+    flexWrap: "wrap",
+  }}
+>
+  <div
+  style={{
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: "16px",
+  }}
+>
+  <h2>Coach Reviews</h2>
+
+
+
+  <a
+    href={`/players/${player.Pt_number}/reviews/add`}
+    style={{
+      padding: "10px 16px",
+      borderRadius: "10px",
+      background: "#f5b51b",
+      color: "#111827",
+      fontWeight: "900",
+      textDecoration: "none",
+    }}
+  >
+    + Add Review
+  </a>
+</div>
+</div>
+{coachReviews?.length > 0 ? (
+  coachReviews.map((review) => (
+  <article
+  key={review.id}
+  className="panel"
+  style={{
+    marginBottom: "16px",
+    padding: "20px",
+    lineHeight: "1.6",
+  }}
+>
+      <h3>
+  Coach Review – {review.review_date
+    ? new Date(review.review_date).toLocaleDateString("en-GB")
+    : "Undated"}
+</h3>
+
+      <p><strong>Coach:</strong> {review.coach_name}</p>
+
+     <strong>Overall Rating:</strong>{" "}
+{"⭐".repeat(Number(review.overall_rating))}
+{"☆".repeat(10 - Number(review.overall_rating))}
+{" "}
+({review.overall_rating}/10)
+
+      <p><strong>Strengths:</strong> {review.strengths}</p>
+<p><strong>Development Areas:</strong> {review.development_areas}</p>
+<p><strong>Coach Comments:</strong> {review.coach_comments}</p>
+<p><strong>Status:</strong> {review.review_status}</p>
+<p>
+  <strong>Next Review:</strong>{" "}
+  {review.next_review_date
+    ? new Date(review.next_review_date).toLocaleDateString("en-GB")
+    : "Not set"}
+</p>
+<div
+  style={{
+    marginTop: "16px",
+    display: "flex",
+    justifyContent: "flex-end",
+  }}
+>
+  <a
+    href={`/players/${player.Pt_number}/reviews/edit/${review.id}`}
+    style={{
+      padding: "8px 14px",
+      borderRadius: "8px",
+      background: "#f5b51b",
+      color: "#111827",
+      fontWeight: "900",
+      textDecoration: "none",
+    }}
+  >
+    ✏️ Edit Review
+  </a>
+</div>
+      <small>
+        {new Date(review.review_date).toLocaleDateString("en-GB")}
+      </small>
+    </article>
+  ))
 ) : (
   <p>No coach reviews yet.</p>
 )}
