@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Header, FooterNav } from "@/components";
+import { Header, FooterNav } from "@/app/components";
 import { supabase } from "@/lib/supabase";
 
 const initialForm = {

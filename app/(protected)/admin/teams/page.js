@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Header, FooterNav } from "@/components";
+import { Header, FooterNav } from "@/app/components";
 import { supabase } from "@/lib/supabase";
 
 const initialForm = {

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { Header, FooterNav } from "@/components";
+import { Header, FooterNav } from "@/app/components";
 import { supabase } from "@/lib/supabase";
 
 const MAX_SQUAD_SIZE = 30;

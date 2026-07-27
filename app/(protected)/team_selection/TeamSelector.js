@@ -1,5 +1,5 @@
 'use client'
-import RugbyPitch from "@/components/RugbyPitch"
+import RugbyPitch from "@/app/components/RugbyPitch"
 import { useState } from 'react'
 import { supabase } from "@/lib/supabase"
 export default function TeamSelector({ players, savedSquad = [], savedCaptain = "", savedViceCaptain = "", savedForwardsCaptain = "" }) {

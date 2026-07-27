@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { supabase } from "@/lib/supabase";
-import { Header, FooterNav } from "@/components";
+import { Header, FooterNav } from "@/app/components";
 
 const adminSections = [
   {
