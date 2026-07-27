@@ -1,7 +1,7 @@
 export const dynamic = 'force-dynamic'
 
-import { Header, FooterNav } from "../../components"
-import { supabase } from "../../../lib/supabase"
+import { Header, FooterNav } from "@/components"
+import { supabase } from "@/lib/supabase"
 
 async function getMatches() {
   if (!supabase) return []

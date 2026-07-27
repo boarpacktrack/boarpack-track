@@ -1,8 +1,8 @@
 "use client"
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import { supabase } from "../../../lib/supabase"
-import { Header, FooterNav } from "../../components"
+import { supabase } from "@/lib/supabase";
+import { Header, FooterNav } from "@/components";
 
 const adminSections = [
   {

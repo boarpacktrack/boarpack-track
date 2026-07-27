@@ -1,5 +1,5 @@
-import { Header, FooterNav } from "../../components"
-import { supabase } from "../../../lib/supabase"
+import { Header, FooterNav } from "@/components"
+import { supabase } from "@/lib/supabase"
 async function getPlayers() {
   if (!supabase) return []
   const { data } = await supabase.from('Players').select('*').order('Pt_number')

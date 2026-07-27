@@ -1,8 +1,8 @@
-import { Header, FooterNav } from "../../../components"
-import { supabase } from "../../../../lib/supabase"
-import SkillsDashboard from "../../../components/SkillsDashboard"
-import ReviewProgressGraph from "../../../components/ReviewProgressGraph"
-import PlayerAnalyticsDashboard from "../../../components/PlayerAnalyticsDashboard"
+import { Header, FooterNav } from "@/components"
+import { supabase } from "@/lib/supabase"
+import SkillsDashboard from "@/components/SkillsDashboard"
+import ReviewProgressGraph from "@/components/ReviewProgressGraph"
+import PlayerAnalyticsDashboard from "@/components/PlayerAnalyticsDashboard"
 async function getPlayer(pt) {
   if (!supabase) return null;
 

@@ -1,4 +1,4 @@
-import { Header, FooterNav } from '../../components'
+import { Header, FooterNav } from "@/components"
 
 export default function TrainingPage() {
   return (

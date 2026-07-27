@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { supabase } from "../../../../lib/supabase";
+import { supabase } from "@/lib/supabase";
 export default function AddReviewPage() {
     const params = useParams();
 const router = useRouter();

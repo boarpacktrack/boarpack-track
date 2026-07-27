@@ -1,6 +1,6 @@
-import { supabase } from "../../../../../lib/supabase";
-import DevelopmentHistory from "../../../../components/DevelopmentHistory";
-import PrintableIPDP from "../../../../components/PrintableIPDP";
+import { supabase } from "@/lib/supabase";
+import DevelopmentHistory from "@/components/DevelopmentHistory";
+import PrintableIPDP from "@/components/PrintableIPDP";
 async function getPlayer(pt) {
   const { data, error } = await supabase
     .from("Players")

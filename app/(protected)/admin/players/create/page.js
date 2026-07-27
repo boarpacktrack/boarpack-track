@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Header, FooterNav } from "../../../components";
-import { supabase } from "../../../lib/supabase";
+import { Header, FooterNav } from "@/components";
+import { supabase } from "@/lib/supabase";
 
 const initialForm = {
   club_id: "",
