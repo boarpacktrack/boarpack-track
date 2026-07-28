@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "../../lib/supabase";
 
@@ -11,6 +11,20 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [isMobile, setIsMobile] = useState(false)
+
+useEffect(() => {
+  const checkScreenSize = () => {
+    setIsMobile(window.innerWidth <= 767)
+  }
+
+  checkScreenSize()
+  window.addEventListener("resize", checkScreenSize)
+
+  return () => {
+    window.removeEventListener("resize", checkScreenSize)
+  }
+}, [])
 
   async function handleLogin(event) {
     event.preventDefault();
@@ -39,7 +53,14 @@ export default function LoginPage() {
       <div style={styles.backgroundGlowOne} />
       <div style={styles.backgroundGlowTwo} />
 
-      <section style={styles.layout}>
+   <section
+  style={{
+    ...styles.layout,
+    gridTemplateColumns: isMobile ? "1fr" : styles.layout.gridTemplateColumns,
+    gap: isMobile ? "24px" : styles.layout.gap,
+    padding: isMobile ? "20px 16px" : styles.layout.padding,
+  }}
+>
         <div style={styles.brandPanel}>
           <div style={styles.brandBadge}>BOAR PACK TRACK</div>
 
