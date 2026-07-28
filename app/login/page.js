@@ -31,7 +31,7 @@ export default function LoginPage() {
     setLoading(true);
     setErrorMessage("");
 
-    const { error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
@@ -43,8 +43,28 @@ export default function LoginPage() {
       return;
     }
 
-    router.push("/");
-    router.refresh();
+  const { data: consent, error: consentCheckError } = await supabase
+  .from("user_consents")
+  .select("accepted, gdpr_version")
+  .eq("user_id", data.user.id)
+  .eq("accepted", true)
+  .eq("gdpr_version", "1.0")
+  .maybeSingle();
+
+if (consentCheckError) {
+  setErrorMessage(
+    "We could not check your consent status. Please try again."
+  );
+  return;
+}
+
+if (!consent) {
+  router.push("/gdpr");
+} else {
+  router.push("/");
+}
+
+router.refresh();
   }
 
   return (
