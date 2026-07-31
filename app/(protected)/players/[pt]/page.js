@@ -582,7 +582,7 @@ const latestAchievement = achievements[0] || null;
               cursor: "pointer",
             }}
           >
-            View Development Plan
+            Open Player Development Centre
           </a>
         </div>
 

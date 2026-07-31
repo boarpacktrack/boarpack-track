@@ -1,6 +1,7 @@
 import { supabase } from "@/lib/supabase";
 import DevelopmentHistory from "@/app/components/DevelopmentHistory";
 import PrintableIPDP from "@/app/components/PrintableIPDP";
+import PrintReportButton from "@/app/components/PrintReportButton";
 async function getPlayer(pt) {
   const { data, error } = await supabase
     .from("Players")
@@ -48,7 +49,7 @@ async function getAchievements(playerId) {
 }
 async function getDevelopmentHistory(playerId) {
   const { data, error } = await supabase
-    .from("player_development_history")
+   .from("player_coach_reviews")
     .select("*")
     .eq("player_id", playerId)
     .order("created_at", { ascending: false });
@@ -58,7 +59,8 @@ async function getDevelopmentHistory(playerId) {
     return [];
   }
 
-  return data || [];
+  console.log("History data:", data);
+return data || [];
 }
 function formatDate(dateValue) {
   if (!dateValue) return "No review date set";
@@ -164,6 +166,21 @@ export default async function PlayerDevelopmentPlan({ params }) {
 
   const plans = await getDevelopmentPlans(player.id);
 const history = await getDevelopmentHistory(player.id);
+const latestReview = history.reduceRight((combined, review) => {
+  const recordedValues = Object.fromEntries(
+    Object.entries(review).filter(
+      ([, value]) =>
+        value !== null &&
+        value !== undefined &&
+        value !== ""
+    )
+  );
+
+  return {
+    ...combined,
+    ...recordedValues,
+  };
+}, {});
 const achievements = await getAchievements(player.id);
   const activeCount = plans.filter(
     (plan) => plan.status?.toLowerCase() === "active"
@@ -186,7 +203,19 @@ const achievements = await getAchievements(player.id);
         >
           ← Back to {player.First_name}
         </a>
+<div style={styles.quickActions}>
+  <a href={`/players/${player.Pt_number}/development/create`} style={styles.actionButton}>
+    ➕ New Development Plan
+  </a>
 
+  <a href={`/players/${player.Pt_number}/reviews`} style={styles.actionButton}>
+    📝 Review History
+  </a>
+
+<PrintReportButton
+  playerName={`${player.First_name} ${player.Last_name}`}
+/>
+</div>
         <header style={styles.header}>
           <div>
             <p style={styles.eyebrow}>BOAR PACK TRACK</p>
@@ -211,7 +240,10 @@ const achievements = await getAchievements(player.id);
   <PrintableIPDP
     player={player}
     achievements={achievements}
-    plan={plans[0] || {}}
+    plan={{
+  ...(plans[0] || {}),
+  ...latestReview,
+}}
    
     clubName="Bradford Salem RUFC"
     squadName="U14s"

@@ -42,7 +42,18 @@ export default function LoginPage() {
       setErrorMessage(error.message);
       return;
     }
+const { data: profile, error: profileError } = await supabase
+  .from("user_profiles")
+  .select("role, club_id, full_name")
+  .eq("id", data.user.id)
+  .maybeSingle();
 
+if (profileError) {
+  setErrorMessage("We could not load your user profile. Please try again.");
+  return;
+}
+
+console.log("LOGIN PROFILE:", profile);
   const { data: consent, error: consentCheckError } = await supabase
   .from("user_consents")
   .select("accepted, gdpr_version")
@@ -60,6 +71,14 @@ if (consentCheckError) {
 
 if (!consent) {
   router.push("/gdpr");
+} else if (profile?.role === "super_admin") {
+  router.push("/dashboard");
+} else if (profile?.role === "club_admin") {
+  router.push("/dashboard");
+} else if (profile?.role === "coach") {
+  router.push("/dashboard");
+} else if (profile?.role === "parent") {
+  router.push("/players");
 } else {
   router.push("/");
 }
