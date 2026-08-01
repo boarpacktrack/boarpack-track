@@ -468,9 +468,9 @@ const styles = {
   profileDropdown: {
     position: "absolute",
     top: "calc(100% + 10px)",
-    right: 0,
-    width: "320px",
-    maxWidth: "calc(100vw - 32px)",
+    left: "50%",
+transform: "translateX(-50%)",
+width: "min(320px, calc(100vw - 32px))",
     padding: "10px",
     overflow: "hidden",
     border: "1px solid rgba(245,184,0,0.3)",
