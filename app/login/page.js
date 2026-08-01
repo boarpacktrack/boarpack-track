@@ -28,62 +28,68 @@ export default function LoginPage() {
 
   async function handleLogin(event) {
     event.preventDefault();
+
+    if (loading) {
+      return;
+    }
+
     setLoading(true);
     setErrorMessage("");
 
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: email.trim(),
+        password,
+      });
 
-    setLoading(false);
+      if (error) {
+        setErrorMessage(error.message);
+        setLoading(false);
+        return;
+      }
 
-    if (error) {
-      setErrorMessage(error.message);
-      return;
+      if (!data?.user) {
+        setErrorMessage(
+          "Login succeeded, but your user account could not be loaded."
+        );
+        setLoading(false);
+        return;
+      }
+
+      const { data: consent, error: consentCheckError } = await supabase
+        .from("user_consents")
+        .select("accepted, gdpr_version")
+        .eq("user_id", data.user.id)
+        .eq("accepted", true)
+        .eq("gdpr_version", "1.0")
+        .maybeSingle();
+
+      if (consentCheckError) {
+        console.error("Consent check error:", consentCheckError);
+
+        setErrorMessage(
+          "We could not check your consent status. Please try again."
+        );
+
+        setLoading(false);
+        return;
+      }
+
+      if (!consent) {
+        router.replace("/gdpr");
+        return;
+      }
+
+      router.replace("/dashboard");
+    } catch (error) {
+      console.error("Unexpected login error:", error);
+
+      setErrorMessage(
+        "Something went wrong while signing in. Please try again."
+      );
+
+      setLoading(false);
     }
-const { data: profile, error: profileError } = await supabase
-  .from("user_profiles")
-  .select("role, club_id, full_name")
-  .eq("id", data.user.id)
-  .maybeSingle();
-
-if (profileError) {
-  setErrorMessage("We could not load your user profile. Please try again.");
-  return;
-}
-
-console.log("LOGIN PROFILE:", profile);
-  const { data: consent, error: consentCheckError } = await supabase
-  .from("user_consents")
-  .select("accepted, gdpr_version")
-  .eq("user_id", data.user.id)
-  .eq("accepted", true)
-  .eq("gdpr_version", "1.0")
-  .maybeSingle();
-
-if (consentCheckError) {
-  setErrorMessage(
-    "We could not check your consent status. Please try again."
-  );
-  return;
-}
-
-if (!consent) {
-  router.push("/gdpr");
-} else if (profile?.role === "super_admin") {
-  router.push("/dashboard");
-} else if (profile?.role === "club_admin") {
-  router.push("/dashboard");
-} else if (profile?.role === "coach") {
-  router.push("/dashboard");
-} else if (profile?.role === "parent") {
-  router.push("/players");
-} else {
-  router.push("/");
-}
-
-router.refresh();
   }
 
   return (
@@ -126,10 +132,12 @@ router.refresh();
           >
             <div style={styles.featureCard}>
               <span style={styles.featureIcon}>🏉</span>
+
               <div>
                 <strong style={styles.featureTitle}>
                   Player Development
                 </strong>
+
                 <p style={styles.featureText}>
                   Track progress, goals, reviews and achievements.
                 </p>
@@ -138,8 +146,10 @@ router.refresh();
 
             <div style={styles.featureCard}>
               <span style={styles.featureIcon}>📊</span>
+
               <div>
                 <strong style={styles.featureTitle}>Club Insight</strong>
+
                 <p style={styles.featureText}>
                   Attendance, match statistics and squad reports.
                 </p>
@@ -148,8 +158,10 @@ router.refresh();
 
             <div style={styles.featureCard}>
               <span style={styles.featureIcon}>🔐</span>
+
               <div>
                 <strong style={styles.featureTitle}>Secure Access</strong>
+
                 <p style={styles.featureText}>
                   Dedicated access for coaches, parents and club officials.
                 </p>
@@ -178,6 +190,7 @@ router.refresh();
                 <strong style={styles.sponsorName}>
                   Boar Pack Rugby Academy
                 </strong>
+
                 <p style={styles.sponsorText}>
                   Official Player Development Partner
                 </p>
@@ -195,6 +208,7 @@ router.refresh();
 
               <div>
                 <strong style={styles.sponsorName}>IB Automotive</strong>
+
                 <p style={styles.sponsorText}>
                   Official Photography Partner
                 </p>
@@ -236,24 +250,30 @@ router.refresh();
             <form onSubmit={handleLogin} style={styles.form}>
               <label style={styles.field}>
                 <span style={styles.label}>Email address</span>
+
                 <input
                   type="email"
                   value={email}
                   onChange={(event) => setEmail(event.target.value)}
                   placeholder="name@example.com"
+                  autoComplete="email"
                   required
+                  disabled={loading}
                   style={styles.input}
                 />
               </label>
 
               <label style={styles.field}>
                 <span style={styles.label}>Password</span>
+
                 <input
                   type="password"
                   value={password}
                   onChange={(event) => setPassword(event.target.value)}
                   placeholder="Enter your password"
+                  autoComplete="current-password"
                   required
+                  disabled={loading}
                   style={styles.input}
                 />
               </label>
@@ -277,8 +297,9 @@ router.refresh();
 
             <div style={styles.securityNotice}>
               <span>🛡️</span>
+
               <span>
-                Secure club access. GDPR and safeguarding controls coming next.
+                Secure club access with GDPR and safeguarding controls.
               </span>
             </div>
 
