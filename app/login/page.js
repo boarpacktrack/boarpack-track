@@ -62,7 +62,9 @@ export default function LoginPage() {
         .eq("user_id", data.user.id)
         .eq("accepted", true)
         .eq("gdpr_version", "1.0")
-        .maybeSingle();
+        .order("accepted_at", { ascending: false })
+.limit(1)
+.maybeSingle();
 
       if (consentCheckError) {
         console.error("Consent check error:", consentCheckError);
