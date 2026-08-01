@@ -99,8 +99,8 @@ export default function GDPRPage() {
       console.error("Audit log error:", auditError.message);
     }
 
-    router.push("/");
-    router.refresh();
+    router.replace("/dashboard");
+router.refresh();
   }
 
   if (loading) {
@@ -152,15 +152,7 @@ export default function GDPRPage() {
               child.
             </p>
 
-            <Link
-  href="/documents/privacy"
-  style={{ textDecoration: "none", color: "inherit" }}
->
-  <div style={styles.policyItem}>
-    <strong>Privacy Policy</strong>
-    <span>How personal information is collected and used.</span>
-  </div>
-</Link>
+
 
              <div style={styles.policyGrid}>
   <Link
