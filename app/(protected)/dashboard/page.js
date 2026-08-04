@@ -594,7 +594,7 @@ function SuperAdminDashboard({ router }) {
           icon="📋"
           title="View All Squads"
           description="Review squads across every registered club."
-          onClick={() => router.push("/squads")}
+          onClick={() => router.push("/admin")}
         />
 
         <DashboardCard
