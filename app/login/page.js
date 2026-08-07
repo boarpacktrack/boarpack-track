@@ -15,8 +15,13 @@ export default function LoginPage() {
 
   useEffect(() => {
     const checkScreenSize = () => {
-      setIsMobile(window.innerWidth <= 767);
-    };
+  const inner = window.innerWidth;
+  const screen = window.screen.width;
+  const mobile = Math.min(inner, screen) <= 767;
+
+  setIsMobile(mobile);
+
+};
 
     checkScreenSize();
     window.addEventListener("resize", checkScreenSize);
@@ -96,10 +101,12 @@ export default function LoginPage() {
 
   return (
     <main style={styles.page}>
+    
       <div style={styles.backgroundGlowOne} />
       <div style={styles.backgroundGlowTwo} />
 
       <section
+      className="login-layout"
         style={{
           ...styles.layout,
           gridTemplateColumns: isMobile ? "1fr" : "1.35fr 0.85fr",
@@ -127,6 +134,7 @@ export default function LoginPage() {
           </p>
 
           <section
+          className="login-feature-grid"
             style={{
               ...styles.featureGrid,
               gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)",
@@ -174,11 +182,14 @@ export default function LoginPage() {
           <p style={styles.sponsorHeading}>DEMONSTRATION PARTNERS</p>
 
           <section
-            style={{
-              ...styles.sponsorGrid,
-              gridTemplateColumns: isMobile ? "1fr" : "repeat(2, 1fr)",
-            }}
-          >
+  className="login-sponsor-grid"
+  style={{
+    ...styles.sponsorGrid,
+    gridTemplateColumns: isMobile ? "1fr" : "repeat(2, 1fr)",
+  }}
+>
+            
+
             <div style={styles.sponsorCard}>
               <div style={styles.sponsorLogo}>
                 <img

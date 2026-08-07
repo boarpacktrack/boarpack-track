@@ -104,3 +104,23 @@ padding:12px 0;
 @media (max-width: 767px){
   .desktop-header{display:none}
 }
+@media (max-width: 767px) {
+  .login-layout {
+    grid-template-columns: 1fr !important;
+    width: 100% !important;
+  }
+
+  .login-layout > * {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .login-feature-grid {
+    grid-template-columns: 1fr !important;
+    width: 100% !important;
+  }
+  .login-sponsor-grid {
+  grid-template-columns: 1fr !important;
+  width: 100% !important;
+}
+}

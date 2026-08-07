@@ -1036,8 +1036,7 @@ playerSummary: {
 
   snapshotGrid: {
     display: "grid",
-    gridTemplateColumns:
-      "repeat(4, minmax(0, 1fr)) minmax(210px, 1.25fr)",
+gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
     gap: "12px",
     padding: "15px",
     background: "#ffffff",
