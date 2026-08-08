@@ -124,3 +124,16 @@ padding:12px 0;
   width: 100% !important;
 }
 }
+@media (max-width: 767px) {
+  .ipdp-stats {
+    grid-template-columns: 1fr !important;
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .ipdp-stats .stat {
+    width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box;
+  }
+}

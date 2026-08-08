@@ -308,7 +308,7 @@ const latestAchievement = achievements[0] || null;
 <p className="small">
   Live development review for {player.First_name} {player.Last_name}.
 </p>
-<div className="stats">
+<div className="stats ipdp-stats">
   <div className="stat">
     <b>Coach</b>
     {player.Coach || "Not Assigned"}
