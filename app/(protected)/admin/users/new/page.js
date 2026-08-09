@@ -437,7 +437,7 @@ export default function AddUserPage() {
           </div>
         </header>
 
-        <section style={styles.contentGrid}>
+        <section className="add-user-content-grid" style={styles.contentGrid}>
           <form style={styles.formCard} onSubmit={handleSubmit}>
             <div style={styles.sectionHeading}>
               <span style={styles.sectionNumber}>1</span>

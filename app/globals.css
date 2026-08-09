@@ -160,4 +160,17 @@ padding:12px 0;
     margin-bottom: 8px !important;
     white-space: normal !important;
   }
+  @media (max-width: 767px) {
+  .add-user-content-grid {
+    grid-template-columns: 1fr !important;
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .add-user-content-grid > * {
+    width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+}
 }
