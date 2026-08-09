@@ -1,3 +1,4 @@
+import AccountControls from "./AccountControls";
 export function Header({active}) {
   const items = [
     ['/', 'Dashboard'],
@@ -24,6 +25,7 @@ export function Header({active}) {
           <a key={href} className={active === label ? 'active' : ''} href={href}>{label}</a>
         ))}
       </nav>
+      <AccountControls />
     </header>
   )
 }
