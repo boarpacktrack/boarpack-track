@@ -134,15 +134,22 @@ padding:12px 0;
     min-width: 0 !important;
   }
 
-  .ipdp-stats .stat {
-    width: auto !important;
-    min-width: 0 !important;
-    box-sizing: border-box !important;
-    padding: 16px 10px !important;
-  }
-
-  .ipdp-stats .stat b {
-    font-size: 24px !important;
-    line-height: 1.1 !important;
-  }
+.ipdp-stats .stat {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  width: auto !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+  padding: 16px 10px !important;
 }
+
+.ipdp-stats .stat b {
+  display: block !important;
+  font-size: 24px !important;
+  line-height: 1.1 !important;
+  margin-bottom: 8px !important;
+}
+ }
