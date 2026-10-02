@@ -242,6 +242,12 @@ const achievements = await getAchievements(player.id);
           >
             + New Development Plan
           </a>
+          <a
+  href={`/players/${player.Pt_number}/development/edit-full`}
+  style={styles.newPlanButton}
+>
+  ✏️ Edit Full IPDP
+</a>
         </header>
         <div style={{ marginTop: "24px", marginBottom: "24px" }}>
   <PrintableIPDP
