@@ -234,13 +234,17 @@ export default function PrintableIPDP({
     "Not assigned"
   );
 
-  const primaryPosition = getValue(
+ const primaryPosition =
+  plan?.player_profile?.preferred_position ||
+  getValue(
     player,
     ["Primary_position", "primary_position", "position"],
     "Not recorded"
   );
 
-  const secondaryPosition = getValue(
+const secondaryPosition =
+  plan?.player_profile?.secondary_position ||
+  getValue(
     player,
     ["Secondary_position", "secondary_position"],
     "Not recorded"
@@ -256,11 +260,16 @@ export default function PrintableIPDP({
     )
   );
 
-  const reviewPeriod = getValue(
-    plan,
-    ["review_period", "review_date", "Review_date"],
-    "Not recorded"
-  );
+const reviewPeriod =
+  plan?.review_period_start && plan?.review_period_end
+    ? `${formatReportDate(plan.review_period_start)} – ${formatReportDate(
+        plan.review_period_end
+      )}`
+    : getValue(
+        plan,
+        ["review_period", "review_date", "Review_date"],
+        "Not recorded"
+      );
 
   const nextReview = getValue(
     plan,
@@ -299,15 +308,28 @@ export default function PrintableIPDP({
     0
   );
 
-  const overallRatingRaw = getValue(
-    plan,
-    ["overall_rating", "Overall_rating"],
-    getValue(
-      player,
-      ["overall_rating", "Overall_rating"],
-      0
-    )
-  );
+  const ratingValues = [
+  player?.Speed,
+  player?.Passing,
+  player?.Tackling,
+  player?.Fitness,
+  player?.Game_IQ,
+  player?.Leadership,
+  player?.Defence,
+  player?.Handling,
+  player?.Kicking,
+].filter((value) => typeof value === "number");
+
+const calculatedOverall =
+  ratingValues.length > 0
+    ? Math.round(
+        ratingValues.reduce((total, value) => total + value, 0) /
+          ratingValues.length
+      )
+    : 0;
+
+const overallRatingRaw =
+  player?.Overall ?? calculatedOverall;
 console.log("PRINTABLE PLAYER DATA:", player);
  const potentialRaw = getValue(
   player,
@@ -349,28 +371,23 @@ console.log("PRINTABLE PLAYER DATA:", player);
     attendanceRaw === "Not recorded"
       ? 0
       : normalisePercentage(attendanceRaw);
+const strengthsRaw =
+  plan?.strengths ??
+  player?.Strengths ??
+  player?.strengths ??
+  [];
 
-  const currentFocus = getValue(
-  plan,
-  [
-    "current_focus",
-    "focus",
-    "development_focus",
-    "strengths",
-    "development_areas"
-  ],
-  getValue(
-    plan,
-    [
-      "current_focus",
-      "primary_goal",
-      "development_goal",
-      "goal",
-      "focus"
-    ],
-    "No current focus has been recorded."
-  )
-);
+const strengths = Array.isArray(strengthsRaw)
+  ? strengthsRaw
+  : String(strengthsRaw)
+      .split(",")
+      .map((item) => item.trim())
+      .filter(Boolean);
+  const currentFocus =
+  plan?.category ||
+  plan?.development_priorities?.[0]?.category ||
+  plan?.target ||
+  "No current focus has been recorded.";
 
   const developmentStatus = getValue(
     plan,
@@ -381,11 +398,12 @@ console.log("PRINTABLE PLAYER DATA:", player);
   const coachComments = getValue(
     plan,
     [
-      "coach_comments",
-      "coach_notes",
-      "notes",
-      "review_comments",
-    ],
+  "coach_review",
+  "coach_comments",
+  "coach_notes",
+  "notes",
+  "review_comments",
+],
     "No coach comments have been recorded yet."
   );
 
@@ -586,8 +604,105 @@ console.log("PRINTABLE PLAYER DATA:", player);
           </div>
         </div>
       </section>
+{strengths.length > 0 && (
+  <section style={styles.strengthsSection}>
+    <div style={styles.sectionHeading}>
+      <h2 style={styles.sectionTitle}>Player Strengths</h2>
+      <div style={styles.sectionLine} />
+    </div>
 
-      <section style={styles.lowerGrid}>
+    <div style={styles.strengthsGrid}>
+      {strengths.map((strength, index) => (
+        <div key={index} style={styles.strengthCard}>
+          <span style={styles.strengthIcon}>✓</span>
+          <span>{strength}</span>
+        </div>
+      ))}
+    </div>
+  </section>
+)}
+{Array.isArray(plan?.development_priorities) &&
+  plan.development_priorities.length > 0 && (
+    <section style={styles.prioritiesSection}>
+      <div style={styles.sectionHeading}>
+        <h2 style={styles.sectionTitle}>
+          Development Priorities & SMART Goals
+        </h2>
+        <div style={styles.sectionLine} />
+      </div>
+
+      <div style={styles.prioritiesGrid}>
+        {plan.development_priorities.map((priority, index) => (
+          <div key={index} style={styles.priorityCard}>
+            <div style={styles.priorityHeader}>
+              Priority {index + 1}
+            </div>
+
+            <div style={styles.priorityCategory}>
+              {priority.category || "Development Priority"}
+            </div>
+
+            <div style={styles.priorityRow}>
+              <strong>Target:</strong>
+              <span>{priority.target || "Not recorded"}</span>
+            </div>
+
+            <div style={styles.priorityRow}>
+              <strong>SMART Goal:</strong>
+              <span>{priority.smart_goal || "Not recorded"}</span>
+            </div>
+
+            <div style={styles.priorityRow}>
+              <strong>Actions:</strong>
+              <span>{priority.actions || "Not recorded"}</span>
+            </div>
+
+            <div style={styles.priorityFooter}>
+              <span>
+                Progress: {priority.progress ?? 0}%
+              </span>
+              <span>
+                {priority.status || "Active"}
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  )}
+     {plan?.player_reflection && (
+  <section style={styles.reflectionSection}>
+    <div style={styles.sectionHeading}>
+      <h2 style={styles.sectionTitle}>Player Reflection</h2>
+      <div style={styles.sectionLine} />
+    </div>
+
+    <div style={styles.reflectionGrid}>
+      <div style={styles.reflectionCard}>
+        <strong>What I am proud of</strong>
+        <span>
+          {plan.player_reflection.proud_of || "Not recorded"}
+        </span>
+      </div>
+
+      <div style={styles.reflectionCard}>
+        <strong>What I want to improve next</strong>
+        <span>
+          {plan.player_reflection.improve_next || "Not recorded"}
+        </span>
+      </div>
+
+      <div style={styles.reflectionCard}>
+        <strong>Support I need</strong>
+        <span>
+          {plan.player_reflection.support_needed || "Not recorded"}
+        </span>
+      </div>
+    </div>
+  </section>
+)}
+     
+     <section style={styles.lowerGrid}>
         <div style={styles.statsPanel}>
           <div style={styles.panelHeading}>
             Performance Stats
@@ -1314,5 +1429,114 @@ footerVersion: {
     width: "100%",
     height: "100%",
     objectFit: "contain",
+  },
+reflectionSection: {
+  padding: "0 28px 22px",
+},
+
+reflectionGrid: {
+  display: "grid",
+  gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+  gap: "10px",
+},
+
+reflectionCard: {
+  display: "flex",
+  flexDirection: "column",
+  gap: "8px",
+  background: "#ffffff",
+  color: "#07152e",
+  border: "1px solid #d9dee7",
+  borderTop: "4px solid #f5b800",
+  borderRadius: "8px",
+  padding: "14px",
+  fontSize: "13px",
+  lineHeight: "1.4",
+  boxSizing: "border-box",
+},
+    strengthsSection: {
+    padding: "0 28px 22px",
+  },
+
+  strengthsGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(2, 1fr)",
+    gap: "10px",
+  },
+
+  strengthCard: {
+    display: "flex",
+    alignItems: "center",
+    gap: "10px",
+    background: "#ffffff",
+    color: "#07152e",
+    border: "1px solid #d9dee7",
+    borderLeft: "4px solid #f5b800",
+    borderRadius: "8px",
+    padding: "12px 14px",
+    fontSize: "13px",
+    fontWeight: "700",
+    boxSizing: "border-box",
+  },
+
+  strengthIcon: {
+    color: "#f5b800",
+    fontSize: "16px",
+    fontWeight: "900",
+  },
+    prioritiesSection: {
+    padding: "0 28px 22px",
+  },
+
+  prioritiesGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(3, 1fr)",
+    gap: "12px",
+  },
+
+  priorityCard: {
+    background: "#ffffff",
+    color: "#07152e",
+    border: "1px solid #d9dee7",
+    borderTop: "4px solid #f5b800",
+    borderRadius: "10px",
+    padding: "14px",
+    boxSizing: "border-box",
+  },
+
+  priorityHeader: {
+    fontSize: "10px",
+    fontWeight: "900",
+    textTransform: "uppercase",
+    color: "#f5b800",
+    marginBottom: "5px",
+  },
+
+  priorityCategory: {
+    fontSize: "16px",
+    fontWeight: "900",
+    color: "#07152e",
+    marginBottom: "12px",
+  },
+
+  priorityRow: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "3px",
+    fontSize: "11px",
+    lineHeight: "1.4",
+    marginBottom: "9px",
+  },
+
+  priorityFooter: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginTop: "12px",
+    paddingTop: "9px",
+    borderTop: "1px solid #d9dee7",
+    fontSize: "10px",
+    fontWeight: "900",
+    color: "#07152e",
   },
 };

@@ -164,7 +164,14 @@ export default async function PlayerDevelopmentPlan({ params }) {
     );
   }
 
-  const plans = await getDevelopmentPlans(player.id);
+ const plans = await getDevelopmentPlans(player.id);
+
+const latestIPDP = plans.find(
+  (plan) =>
+    plan.development_priorities &&
+    Array.isArray(plan.development_priorities) &&
+    plan.development_priorities.length > 0
+);
 const history = await getDevelopmentHistory(player.id);
 const latestReview = history.reduceRight((combined, review) => {
   const recordedValues = Object.fromEntries(
@@ -241,8 +248,8 @@ const achievements = await getAchievements(player.id);
     player={player}
     achievements={achievements}
     plan={{
-  ...(plans[0] || {}),
   ...latestReview,
+  ...(latestIPDP || plans[0] || {}),
 }}
    
     clubName="Bradford Salem RUFC"
@@ -308,160 +315,181 @@ const achievements = await getAchievements(player.id);
           </section>
         ) : (
           <section style={styles.planGrid}>
-            {plans.map((plan, index) => {
-              const statusStyle = getStatusStyle(plan.status);
-              const progress = Math.min(
-                100,
-                Math.max(0, Number(plan.progress) || 0)
-              );
+           {plans.map((plan, index) => {
+  const priorities =
+    Array.isArray(plan.development_priorities) &&
+    plan.development_priorities.length > 0
+      ? plan.development_priorities
+      : [
+          {
+            category: plan.category || "Development",
+            target: plan.target || "No target entered",
+            smart_goal: "",
+            actions: plan.coach_notes || "",
+            progress: Number(plan.progress) || 0,
+            status: plan.status || "Active",
+          },
+        ];
 
-              return (
-                <article key={plan.id} style={styles.planCard}>
-                  <div style={styles.planTopRow}>
-                    <div style={styles.categoryArea}>
-                      <span style={styles.categoryIcon}>
-                        {getCategoryIcon(plan.category)}
-                      </span>
+  return priorities.map((priority, priorityIndex) => {
+    const progress = Math.min(
+      100,
+      Math.max(0, Number(priority.progress) || 0)
+    );
 
-                      <div>
-                        <span style={styles.priorityNumber}>
-                          PRIORITY {index + 1}
-                        </span>
+    const priorityStatus = priority.status || plan.status || "Active";
+    const statusStyle = getStatusStyle(priorityStatus);
 
-                        <h3 style={styles.categoryHeading}>
-                          {plan.category || "Development"}
-                        </h3>
-                      </div>
-                    </div>
+    return (
+      <article
+        key={`${plan.id}-${priorityIndex}`}
+        style={styles.planCard}
+      >
+        <div style={styles.planTopRow}>
+          <div style={styles.categoryArea}>
+            <span style={styles.categoryIcon}>
+              {getCategoryIcon(priority.category)}
+            </span>
 
-                    <span
-                      style={{
-                        ...styles.statusBadge,
-                        background: statusStyle.background,
-                        border: statusStyle.border,
-                        color: statusStyle.color,
-                      }}
-                    >
-                      <span
-                        style={{
-                          ...styles.statusDot,
-                          background: statusStyle.dot,
-                        }}
-                      />
+            <div>
+              <span style={styles.priorityNumber}>
+                PRIORITY {priorityIndex + 1}
+              </span>
 
-                      {statusStyle.label}
-                    </span>
-                  </div>
+              <h3 style={styles.categoryHeading}>
+                {priority.category || "Development"}
+              </h3>
+            </div>
+          </div>
 
-                  <div style={styles.divider} />
+          <span
+            style={{
+              ...styles.statusBadge,
+              background: statusStyle.background,
+              border: statusStyle.border,
+              color: statusStyle.color,
+            }}
+          >
+            <span
+              style={{
+                ...styles.statusDot,
+                background: statusStyle.dot,
+              }}
+            />
+            {statusStyle.label}
+          </span>
+        </div>
 
-                  <div style={styles.contentGrid}>
-                    <div style={styles.targetSection}>
-                      <span style={styles.smallLabel}>TARGET</span>
+        <div style={styles.divider} />
 
-                      <p style={styles.targetText}>
-                        {plan.target || "No target entered"}
-                      </p>
-                    </div>
+        <div style={styles.contentGrid}>
+          <div style={styles.targetSection}>
+            <span style={styles.smallLabel}>TARGET</span>
+            <p style={styles.targetText}>
+              {priority.target || "No target entered"}
+            </p>
+          </div>
 
-                    <div style={styles.reviewSection}>
-                      <span style={styles.smallLabel}>REVIEW DATE</span>
+          <div style={styles.reviewSection}>
+            <span style={styles.smallLabel}>REVIEW DATE</span>
+            <p style={styles.reviewDate}>
+              📅 {formatDate(plan.next_review_date || plan.review_date)}
+            </p>
+          </div>
+        </div>
 
-                      <p style={styles.reviewDate}>
-                        📅 {formatDate(plan.review_date)}
-                      </p>
-                    </div>
-                  </div>
+        {priority.smart_goal && (
+          <div style={styles.coachNotesSection}>
+            <span style={styles.smallLabel}>SMART GOAL</span>
+            <p style={styles.coachNotes}>{priority.smart_goal}</p>
+          </div>
+        )}
 
-                  <div style={styles.progressSection}>
-                    <div style={styles.progressHeading}>
-                      <span style={styles.smallLabel}>PROGRESS</span>
+        <div style={styles.progressSection}>
+          <div style={styles.progressHeading}>
+            <span style={styles.smallLabel}>PROGRESS</span>
+            <strong style={styles.progressPercentage}>
+              {progress}%
+            </strong>
+          </div>
 
-                      <strong style={styles.progressPercentage}>
-                        {progress}%
-                      </strong>
-                    </div>
+          <div style={styles.progressTrack}>
+            <div
+              style={{
+                ...styles.progressFill,
+                width: `${progress}%`,
+              }}
+            />
+          </div>
+        </div>
 
-                    <div style={styles.progressTrack}>
-                      <div
-                        style={{
-                          ...styles.progressFill,
-                          width: `${progress}%`,
-                        }}
-                      />
-                    </div>
-                  </div>
-<div
-  style={{
-    display: "grid",
-    gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-    gap: "12px",
-    marginTop: "18px",
-  }}
->
-  <div
-    style={{
-      padding: "14px",
-      borderRadius: "10px",
-      background: "rgba(255,255,255,0.05)",
-      border: "1px solid rgba(255,255,255,0.1)",
-    }}
-  >
-    <span style={styles.smallLabel}>COACH</span>
-    <p style={{ margin: "7px 0 0", fontWeight: "800" }}>
-      {plan.coach_name || "Not assigned"}
-    </p>
-  </div>
+        <div style={styles.infoGrid}>
+          <div
+            style={{
+              padding: "14px",
+              borderRadius: "10px",
+              background: "rgba(255,255,255,0.05)",
+              border: "1px solid rgba(255,255,255,0.13)",
+            }}
+          >
+            <span style={styles.smallLabel}>COACH</span>
+            <p style={{ margin: "7px 0 0", fontWeight: "800" }}>
+              {plan.coach_name || "Not assigned"}
+            </p>
+          </div>
 
-  <div
-    style={{
-      padding: "14px",
-      borderRadius: "10px",
-      background: "rgba(255,255,255,0.05)",
-      border: "1px solid rgba(255,255,255,0.1)",
-    }}
-  >
-    <span style={styles.smallLabel}>CURRENT STATUS</span>
-    <p style={{ margin: "7px 0 0", fontWeight: "800" }}>
-      {statusStyle.label}
-    </p>
-  </div>
-</div>
-                  <div style={styles.coachNotesSection}>
-                    <span style={styles.smallLabel}>
-                      ACTIONS &amp; COACH NOTES
-                    </span>
+          <div
+            style={{
+              padding: "14px",
+              borderRadius: "10px",
+              background: "rgba(255,255,255,0.05)",
+              border: "1px solid rgba(255,255,255,0.13)",
+            }}
+          >
+            <span style={styles.smallLabel}>CURRENT STATUS</span>
+            <p style={{ margin: "7px 0 0", fontWeight: "800" }}>
+              {statusStyle.label}
+            </p>
+          </div>
+        </div>
 
-                    <p style={styles.coachNotes}>
-                      {plan.coach_notes ||
-                        "No coach actions have been entered."}
-                    </p>
-                  </div>
+        <div style={styles.coachNotesSection}>
+          <span style={styles.smallLabel}>
+            ACTIONS &amp; COACH NOTES
+          </span>
 
-                  <div style={styles.cardFooter}>
-                    <span style={styles.createdText}>
-                      Created{" "}
-                      {plan.created_at
-                        ? new Intl.DateTimeFormat("en-GB", {
-                            day: "numeric",
-                            month: "short",
-                            year: "numeric",
-                          }).format(new Date(plan.created_at))
-                        : "date unavailable"}
-                    </span>
+          <p style={styles.coachNotes}>
+            {priority.actions ||
+              plan.coach_notes ||
+              "No coach actions have been entered."}
+          </p>
+        </div>
 
-                    <div style={styles.actionRow}>
-                      <a
-                        href={`/players/${player.Pt_number}/development/edit/${plan.id}`}
-                        style={styles.secondaryButton}
-                      >
-                        Edit Plan
-                      </a>
-                    </div>
-                  </div>
-                </article>
-              );
-            })}
+        <div style={styles.cardFooter}>
+          <span style={styles.createdText}>
+            Created{" "}
+            {plan.created_at
+              ? new Intl.DateTimeFormat("en-GB", {
+                  day: "numeric",
+                  month: "short",
+                  year: "numeric",
+                }).format(new Date(plan.created_at))
+              : "date unavailable"}
+          </span>
+
+          <div style={styles.actionRow}>
+            <a
+             href={`/players/${player.Pt_number}/development/edit/${plan.id}?priority=${priorityIndex}`}
+              style={styles.secondaryButton}
+            >
+              Edit Plan
+            </a>
+          </div>
+        </div>
+      </article>
+    );
+  });
+})}
           </section>
         )}
 <DevelopmentHistory history={history} />

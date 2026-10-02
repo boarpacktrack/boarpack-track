@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 
 const categories = [
@@ -23,16 +23,25 @@ const categories = [
 export default function EditDevelopmentPlan() {
   const params = useParams();
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const pt = params.pt;
   const id = params.id;
 
+  const requestedPriority = Number(searchParams.get("priority") || 0);
+
+  const [priorityIndex, setPriorityIndex] = useState(requestedPriority);
+  const [allPriorities, setAllPriorities] = useState([]);
+
   const [category, setCategory] = useState("");
   const [target, setTarget] = useState("");
-  const [coachNotes, setCoachNotes] = useState("");
+  const [smartGoal, setSmartGoal] = useState("");
+  const [actions, setActions] = useState("");
   const [status, setStatus] = useState("Active");
-  const [reviewDate, setReviewDate] = useState("");
   const [progress, setProgress] = useState(0);
+
+  const [reviewDate, setReviewDate] = useState("");
+  const [coachName, setCoachName] = useState("");
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -42,7 +51,6 @@ export default function EditDevelopmentPlan() {
 
   useEffect(() => {
     if (!id || !pt) return;
-
     loadPlan();
   }, [id, pt]);
 
@@ -85,18 +93,47 @@ export default function EditDevelopmentPlan() {
         );
       }
 
-      setCategory(plan.category || "");
-      setTarget(plan.target || "");
-      setCoachNotes(plan.coach_notes || "");
-      setStatus(plan.status || "Active");
-      setReviewDate(plan.review_date || "");
-      setProgress(Number(plan.progress) || 0);
-
       if (player) {
         setPlayerName(
           `${player.First_name || ""} ${player.Last_name || ""}`.trim()
         );
       }
+
+      const priorities = Array.isArray(plan.development_priorities)
+        ? plan.development_priorities
+        : [];
+
+      if (priorities.length > 0) {
+        const safeIndex =
+          requestedPriority >= 0 && requestedPriority < priorities.length
+            ? requestedPriority
+            : 0;
+
+        setPriorityIndex(safeIndex);
+        setAllPriorities(priorities);
+
+        const selectedPriority = priorities[safeIndex] || {};
+
+        setCategory(selectedPriority.category || "");
+        setTarget(selectedPriority.target || "");
+        setSmartGoal(selectedPriority.smart_goal || "");
+        setActions(selectedPriority.actions || "");
+        setProgress(Number(selectedPriority.progress) || 0);
+        setStatus(selectedPriority.status || "Active");
+      } else {
+        setPriorityIndex(0);
+        setAllPriorities([]);
+
+        setCategory(plan.category || "");
+        setTarget(plan.target || "");
+        setSmartGoal("");
+        setActions(plan.coach_notes || "");
+        setProgress(Number(plan.progress) || 0);
+        setStatus(plan.status || "Active");
+      }
+
+      setReviewDate(plan.next_review_date || plan.review_date || "");
+      setCoachName(plan.coach_name || "");
     } catch (error) {
       console.error(error);
 
@@ -126,26 +163,73 @@ export default function EditDevelopmentPlan() {
       return;
     }
 
-    if (!reviewDate) {
-      setErrorMessage("Please choose a review date.");
-      return;
-    }
-
     try {
       setSaving(true);
 
-      const { error: updateError } = await supabase
-        .from("player_development_plans")
-        .update({
+      let updateData = {
+        updated_at: new Date().toISOString(),
+      };
+
+      if (allPriorities.length > 0) {
+        const updatedPriorities = allPriorities.map((priority, index) => {
+          if (index !== priorityIndex) {
+            return priority;
+          }
+
+          return {
+            ...priority,
+            order: priority.order ?? index + 1,
+            category,
+            target: target.trim(),
+            smart_goal: smartGoal.trim(),
+            actions: actions.trim(),
+            progress: Number(progress),
+            status,
+          };
+        });
+
+        const firstPriority = updatedPriorities[0] || {};
+
+        updateData = {
+          ...updateData,
+
+          development_priorities: updatedPriorities,
+
+          // Keep old fields compatible with the first priority.
+          category: firstPriority.category || null,
+          target: firstPriority.target || null,
+          coach_notes: firstPriority.actions || null,
+          progress: Number(firstPriority.progress) || 0,
+          status: firstPriority.status || "Active",
+
+          summary:
+            firstPriority.category && firstPriority.target
+              ? `${firstPriority.category}: ${firstPriority.target}`
+              : null,
+
+          review_date: reviewDate || null,
+          next_review_date: reviewDate || null,
+          coach_name: coachName.trim() || null,
+        };
+      } else {
+        updateData = {
+          ...updateData,
+
           category,
           target: target.trim(),
-          coach_notes: coachNotes.trim() || null,
+          coach_notes: actions.trim() || null,
           status,
-          review_date: reviewDate,
+          review_date: reviewDate || null,
+          next_review_date: reviewDate || null,
           progress: Number(progress),
+          coach_name: coachName.trim() || null,
           summary: `${category}: ${target.trim()}`,
-          updated_at: new Date().toISOString(),
-        })
+        };
+      }
+
+      const { error: updateError } = await supabase
+        .from("player_development_plans")
+        .update(updateData)
         .eq("id", id);
 
       if (updateError) {
@@ -154,19 +238,19 @@ export default function EditDevelopmentPlan() {
         );
       }
 
-      setMessage("Development plan updated successfully.");
+      setMessage("Development priority updated successfully.");
 
       setTimeout(() => {
         router.push(`/players/${pt}/development`);
         router.refresh();
-      }, 1000);
+      }, 700);
     } catch (error) {
       console.error(error);
 
       setErrorMessage(
         error instanceof Error
           ? error.message
-          : "Something went wrong while updating the plan."
+          : "Something went wrong while updating the priority."
       );
     } finally {
       setSaving(false);
@@ -178,9 +262,9 @@ export default function EditDevelopmentPlan() {
       <main style={styles.page}>
         <section style={styles.loadingCard}>
           <div style={styles.loadingIcon}>🐗</div>
-          <h1 style={styles.loadingHeading}>Loading Development Plan</h1>
+          <h1 style={styles.loadingHeading}>Loading Development Priority</h1>
           <p style={styles.loadingText}>
-            Retrieving the latest player information...
+            Retrieving the latest IPDP information...
           </p>
         </section>
       </main>
@@ -191,7 +275,7 @@ export default function EditDevelopmentPlan() {
     return (
       <main style={styles.page}>
         <section style={styles.loadingCard}>
-          <h1 style={styles.loadingHeading}>Unable to Load Plan</h1>
+          <h1 style={styles.loadingHeading}>Unable to Load Priority</h1>
 
           <div style={styles.errorMessage}>{errorMessage}</div>
 
@@ -214,15 +298,24 @@ export default function EditDevelopmentPlan() {
           <div>
             <p style={styles.eyebrow}>BOAR PACK TRACK</p>
 
-            <h1 style={styles.heading}>Edit Development Plan</h1>
+            <h1 style={styles.heading}>
+              Edit Development Priority
+            </h1>
 
             <p style={styles.playerName}>
               {playerName || `Player ${pt}`}
             </p>
+
+            {allPriorities.length > 0 && (
+              <p style={styles.priorityLabel}>
+                Priority {priorityIndex + 1} of {allPriorities.length}
+              </p>
+            )}
           </div>
 
           <div style={styles.headerProgress}>
             <span style={styles.headerProgressLabel}>CURRENT PROGRESS</span>
+
             <strong style={styles.headerProgressNumber}>
               {progress}%
             </strong>
@@ -257,34 +350,45 @@ export default function EditDevelopmentPlan() {
               Development Target
             </label>
 
-            <input
+            <textarea
               id="target"
-              type="text"
               value={target}
               onChange={(event) => setTarget(event.target.value)}
-              placeholder="Enter the player's development target"
-              style={styles.input}
+              rows={3}
+              placeholder="What does the player need to develop?"
+              style={styles.textarea}
               disabled={saving}
             />
           </div>
 
           <div style={styles.field}>
-            <label htmlFor="coachNotes" style={styles.label}>
-              Actions and Coach Notes
+            <label htmlFor="smartGoal" style={styles.label}>
+              SMART Goal
             </label>
 
             <textarea
-              id="coachNotes"
-              value={coachNotes}
-              onChange={(event) => setCoachNotes(event.target.value)}
-              rows={7}
-              placeholder="Enter coaching actions, support and review notes..."
-              style={{
-                ...styles.input,
-                minHeight: "160px",
-                resize: "vertical",
-                lineHeight: "1.55",
-              }}
+              id="smartGoal"
+              value={smartGoal}
+              onChange={(event) => setSmartGoal(event.target.value)}
+              rows={4}
+              placeholder="Enter the specific SMART goal for this priority..."
+              style={styles.textarea}
+              disabled={saving}
+            />
+          </div>
+
+          <div style={styles.field}>
+            <label htmlFor="actions" style={styles.label}>
+              Actions & Coaching Support
+            </label>
+
+            <textarea
+              id="actions"
+              value={actions}
+              onChange={(event) => setActions(event.target.value)}
+              rows={6}
+              placeholder="What actions, practice or coaching support are required?"
+              style={styles.textarea}
               disabled={saving}
             />
           </div>
@@ -292,7 +396,7 @@ export default function EditDevelopmentPlan() {
           <div style={styles.twoColumnGrid}>
             <div style={styles.field}>
               <label htmlFor="status" style={styles.label}>
-                Status
+                Priority Status
               </label>
 
               <select
@@ -318,7 +422,7 @@ export default function EditDevelopmentPlan() {
 
             <div style={styles.field}>
               <label htmlFor="reviewDate" style={styles.label}>
-                Review Date
+                Next Review Date
               </label>
 
               <input
@@ -332,6 +436,22 @@ export default function EditDevelopmentPlan() {
             </div>
           </div>
 
+          <div style={styles.field}>
+            <label htmlFor="coachName" style={styles.label}>
+              Coach
+            </label>
+
+            <input
+              id="coachName"
+              type="text"
+              value={coachName}
+              onChange={(event) => setCoachName(event.target.value)}
+              placeholder="Coach name"
+              style={styles.input}
+              disabled={saving}
+            />
+          </div>
+
           <div style={styles.progressSection}>
             <div style={styles.progressHeading}>
               <div>
@@ -340,7 +460,8 @@ export default function EditDevelopmentPlan() {
                 </label>
 
                 <p style={styles.progressHelp}>
-                  Move the slider as the player works towards the target.
+                  Update this individual development priority as the player
+                  progresses.
                 </p>
               </div>
 
@@ -418,7 +539,7 @@ export default function EditDevelopmentPlan() {
               }}
               disabled={saving}
             >
-              {saving ? "Saving Changes..." : "Save Changes"}
+              {saving ? "Saving Changes..." : "Save Priority Changes"}
             </button>
           </div>
         </form>
@@ -438,7 +559,7 @@ const styles = {
 
   card: {
     width: "100%",
-    maxWidth: "900px",
+    maxWidth: "950px",
     margin: "0 auto",
     overflow: "hidden",
     border: "1px solid rgba(245, 184, 0, 0.48)",
@@ -478,6 +599,17 @@ const styles = {
     color: "#cbd5e1",
     fontSize: "17px",
     fontWeight: "800",
+  },
+
+  priorityLabel: {
+    display: "inline-block",
+    margin: "10px 0 0",
+    padding: "5px 10px",
+    border: "1px solid rgba(245,184,0,0.4)",
+    borderRadius: "999px",
+    color: "#f5b800",
+    fontSize: "12px",
+    fontWeight: "900",
   },
 
   headerProgress: {
@@ -530,6 +662,20 @@ const styles = {
     background: "#ffffff",
     color: "#071426",
     fontSize: "16px",
+  },
+
+  textarea: {
+    width: "100%",
+    boxSizing: "border-box",
+    padding: "14px",
+    border: "1px solid #36506e",
+    borderRadius: "10px",
+    outline: "none",
+    background: "#ffffff",
+    color: "#071426",
+    fontSize: "16px",
+    lineHeight: "1.55",
+    resize: "vertical",
   },
 
   twoColumnGrid: {
@@ -640,6 +786,7 @@ const styles = {
     color: "#071426",
     fontSize: "15px",
     fontWeight: "900",
+    cursor: "pointer",
   },
 
   loadingCard: {
