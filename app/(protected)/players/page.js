@@ -16,6 +16,7 @@ export default async function PlayersPage() {
         <div className="panel wide">
           <h2>Bradford Salem U14s Players</h2>
           <p className="small">Live squad pulled from Supabase.</p>
+          <a href="/admin/players/create" className="btn">+ Add Player</a>
           <div className="cards">
             {players.map((p) => (
               <a className="card" key={p.id || p.Pt_number} href={`/players/${p.Pt_number}`}>
