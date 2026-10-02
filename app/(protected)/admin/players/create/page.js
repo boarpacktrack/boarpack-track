@@ -149,7 +149,7 @@ async function loadTeams(clubId) {
       Caps: Number(form.Caps) || 0,
       Strengths: form.Strengths.trim() || null,
       Development_Areas: form.Development_Areas.trim() || null,
-      Coach_Notes: form.Coach_Notes.trim() || null,
+      
       captain: form.captain,
       Speed: Number(form.Speed) || 0,
       Handling: Number(form.Handling) || 0,
